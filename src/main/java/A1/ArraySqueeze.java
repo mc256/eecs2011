@@ -33,13 +33,12 @@ public class ArraySqueeze {
 	 * 
 	 * @param ints
 	 *            the input array.
-	 *            precondition: this array is not null
 	 *           
 	 */
 
 	public static void squeeze(int[] ints) {
 		//If the array less than 2 elements, we don't need to do anything.
-		if (ints.length > 1){
+		if (ints != null && ints.length > 1){
 			//For the first element, we don't need to touch it. 
 			//Set the pointer to the location 1
 			//The previous number is the number in location 0

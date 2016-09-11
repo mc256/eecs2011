@@ -32,7 +32,7 @@ public class ArrayLongestPlateau {
 	 *         2.
 	 * 
 	 * @param ints
-	 *            the input array. precondition: this array is not null
+	 *            the input array. precondition: this array is not empty
 	 */
 
 	public static int[] longestPlateau(int[] ints) {
@@ -40,13 +40,10 @@ public class ArrayLongestPlateau {
 		// 1. find the non-repeat list (Squeeze), record that number and
 		// 2. find the largest number(s) and also the
 
-		// Three types of array
-		// 1. If the array is empty
-		// 2. If the array has only ONE object
-		// 3. just a regular array
-		if (ints.length == 0) {
-			return new int[] { 0, 0, 0 };
-		} else if (ints.length == 1) {
+		// Two types of array:
+		// 1. If the array has only ONE object
+		// 2. An array has more than one element.
+		if (ints.length == 1) {
 			return new int[] { ints[0], 0, 1 };
 		} else {
 			// Copy the array to a temporary variable,
@@ -60,6 +57,7 @@ public class ArrayLongestPlateau {
 			width[0] = 1;
 			position[0] = 0;
 
+			/////////////////////////////////////////////////////
 			// Squeeze the array
 
 			// For the first element, we don't need to touch it.
@@ -69,10 +67,12 @@ public class ArrayLongestPlateau {
 			int pointer = 0;
 
 			// Traverse the elements from Location 1 to the end,
-			// If the element doesn't not equal to the previous one,
-			// 1. Copy this element to the pointer location,
-			// 2. Store this element to previous
-			// 2. Move the pointer to the next location
+			// If the element doesn't not equal to the previous one:
+			// 1. Move the pointer to the next location
+			// 2. Copy this element to the location pointed in temporary array 
+			// 3. Store this element to previous
+			// If the element equals to the previous one:
+			// 1. Increase the width
 			for (int i = 1; i < temp.length; i++) {
 				if (temp[i] != previous) {
 					pointer++;
@@ -83,8 +83,9 @@ public class ArrayLongestPlateau {
 					width[pointer]++;
 				}
 			}
-			
-			// Find the highest and widest
+
+			/////////////////////////////////////////////////////
+			// Find the Longest Plateau
 			int height = 0;
 			int widest = 0;
 			int tag = 0;
@@ -111,6 +112,7 @@ public class ArrayLongestPlateau {
 				tag = pointer;
 			}
 
+			/////////////////////////////////////////////////////
 			return new int[] { height, position[tag], widest };
 		}
 	}
@@ -168,19 +170,19 @@ public class ArrayLongestPlateau {
 		System.out.println("[ value , start , len ] = " + result + " \n");
 		TestHelper.verify(result.equals("[ 6 , 6 , 2 ]"), "Wrong: that's not the longest plateau!!!  No chocolate.");
 
-		int[] test8 = {4, 5};
+		int[] test8 = { 4, 5 };
 		System.out.println("longest plateau of " + TestHelper.stringInts(test8) + ":");
 		result = TestHelper.stringInts(longestPlateau(test8));
 		System.out.println("[ value , start , len ] = " + result + " \n");
 		TestHelper.verify(result.equals("[ 5 , 1 , 1 ]"), "Wrong: that's not the longest plateau!!!  No chocolate.");
 
-		int[] test9 = {-1, -2};
+		int[] test9 = { -1, -2 };
 		System.out.println("longest plateau of " + TestHelper.stringInts(test9) + ":");
 		result = TestHelper.stringInts(longestPlateau(test9));
 		System.out.println("[ value , start , len ] = " + result + " \n");
 		TestHelper.verify(result.equals("[ -1 , 0 , 1 ]"), "Wrong: that's not the longest plateau!!!  No chocolate.");
-		
-		int[] test10 = {-2, -1};
+
+		int[] test10 = { -2, -1 };
 		System.out.println("longest plateau of " + TestHelper.stringInts(test10) + ":");
 		result = TestHelper.stringInts(longestPlateau(test10));
 		System.out.println("[ value , start , len ] = " + result + " \n");
