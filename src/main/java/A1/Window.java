@@ -8,6 +8,11 @@
 
 package A1;
 
+/**
+ * This class is built for windows. And check if windows are overlapping or enclosing.
+ * @author chen256
+ *
+ */
 public class Window {
 
 	// Attributes
@@ -195,7 +200,7 @@ public class Window {
 	// Static Methods
 
 	/**
-	 * 
+	 * enclosureCount() counts how many windows are enclosure in the array given. 
 	 * 
 	 * @param windows
 	 *            array of windows
@@ -223,7 +228,7 @@ public class Window {
 	}
 
 	/**
-	 * 
+	 * overlapCount() counts how many windows are overlapping in the array given.
 	 * 
 	 * @param windows
 	 *            array of windows
@@ -247,6 +252,58 @@ public class Window {
 		return count;
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return String.format("Window [left=%s, right=%s, bottom=%s, top=%s]", left, right, bottom, top);
+	}
+
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(bottom);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(left);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(right);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(top);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Window other = (Window) obj;
+		if (Double.doubleToLongBits(bottom) != Double.doubleToLongBits(other.bottom))
+			return false;
+		if (Double.doubleToLongBits(left) != Double.doubleToLongBits(other.left))
+			return false;
+		if (Double.doubleToLongBits(right) != Double.doubleToLongBits(other.right))
+			return false;
+		if (Double.doubleToLongBits(top) != Double.doubleToLongBits(other.top))
+			return false;
+		return true;
+	}
+
 	/**
 	 * main() runs test cases on your all the methods in this class. Prints
 	 * summary information on basic operations and halts with an error (and a
@@ -255,9 +312,13 @@ public class Window {
 	public static void main(String[] args) {
 		try {
 			Window w1 = new Window(1, 5, 3, 4);
+			System.out.printf("w1 => %s%n", w1);
 			Window w2 = new Window(0, 8, 2, 6);
+			System.out.printf("w2 => %s%n", w2);
 			Window w3 = new Window(3, 6, 1, 7);
+			System.out.printf("w3 => %s%n", w3);
 			Window w4 = new Window(5, 8, 8, 9);
+			System.out.printf("w4 => %s%n", w4);
 			Window[] array = { w1, w2, w3, w4 };
 			
 			boolean t1 = w1.overlaps(w2);
@@ -304,7 +365,13 @@ public class Window {
 			System.out.printf("Window.overlapCount(array) => %d%n", t11);
 			TestHelper.verify(t11 == 3, "ERROR!");
 			
-		} catch (InvalidWindowException e) {
+			System.out.println("This final test will give an exception because I set the window's left larger than its right.");
+			System.out.printf("w1.getRight() => %f%n", w1.getRight());
+			System.out.printf("w1.setLeft(100);%n");
+			
+			w1.setLeft(100);
+			
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 

@@ -12,8 +12,15 @@ public class InvalidWindowException extends Exception {
 
 	/**
 	 * serialVersionUID 
+	 * Some random digits, but this one is My Student ID + course ID + assignment ID...
 	 */
 	private static final long serialVersionUID = 2145331110002011013L;
 
+	public InvalidWindowException(){
+		super();
+	}
 	
+	public InvalidWindowException(String msg){
+		super(msg);
+	}
 }

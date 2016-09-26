@@ -1,9 +1,9 @@
 /**********************************************************
  * EECS2011: Fundamentals of Data Structures,  Fall 2016
  * Assignment 1, Problem 1,2,3,... : TestHelper.java
- * Student Name:   ?
- * Student cse account:  ?
- * Student ID number:  ? 
+ * Student Name: Jun Lin Chen
+ * Student cse account: chen256
+ * Student ID number: 214533111
  **********************************************************/
 
 package A1;
