@@ -190,7 +190,9 @@ public class Window {
 	 */
 	public boolean overlaps(Window w) {
 		// If one of the condition is true, then two window do not overlap.
-		if ((w.getRight() < this.left) || (w.getLeft() > this.right) || (w.getTop() < this.bottom) || (w.getBottom() > this.top)) {
+		// Just touching boundaries is not enough, therefore,
+		// use smaller/greater or equal than
+		if ((w.getRight() <= this.left) || (w.getLeft() >= this.right) || (w.getTop() <= this.bottom) || (w.getBottom() >= this.top)) {
 			return false;
 		} else {
 			return true;
