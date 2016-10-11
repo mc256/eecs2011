@@ -1,4 +1,4 @@
-package A2;
+package A2sol;
 
 import java.util.Scanner;
 
