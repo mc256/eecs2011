@@ -1,63 +1,39 @@
 package A2sol;
 
-import java.util.ArrayList;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Hypercube {
 
-	public static final int MAX_DIMENSION = 1000;
-	public int dimension;
-
 	static class Corner {
-		boolean[] coordinates = new boolean[MAX_DIMENSION];
+		boolean[] coordinates;
 		int dimension;
 
 		public Corner(int dimension) {
+			this.coordinates = new boolean[dimension];
 			for (int i = 0; i < dimension; i++) {
 				this.coordinates[i] = false;
 			}
 			this.dimension = dimension;
 		}
 
-		public Corner(int dimension, boolean[] coordinates) {
+		public Corner(int dimension, int position) {
 			this(dimension);
 			for (int i = 0; i < dimension; i++) {
-				this.coordinates[i] = coordinates[i];
-			}
-		}
-
-		public Corner(int dimension, boolean[] coordinates, int offset) {
-			this(dimension, coordinates);
-			this.coordinates[offset] = !this.coordinates[offset];
-		}
-
-		/*
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			Corner other = (Corner) obj;
-			if (this.dimension != other.dimension) {
-				return false;
-			}
-			for (int i = 0; i < this.dimension; i++) {
-				if (this.coordinates[i] != other.coordinates[i]) {
-					return false;
+				int bit = position & 1;
+				position >>= 1;
+				if (bit == 1) {
+					this.coordinates[dimension - i - 1] = true;
+				} else {
+					this.coordinates[dimension - i - 1] = false;
 				}
 			}
-			return true;
 		}
-		
-		/*
-		 * @see java.lang.Object#toString()
-		 */
+
+		public void move(int direction) {
+			this.coordinates[direction] = !this.coordinates[direction];
+		}
+
 		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
@@ -71,62 +47,92 @@ public class Hypercube {
 			return sb.toString();
 		}
 
-	}
-
-	public Hypercube(int dimension) {
-		this.dimension = dimension;
-	}
-
-	private void recursiveWalk(final Corner currentPosition, final ArrayList<Corner> result) {
-		boolean noWay = true;
-		result.add(currentPosition);
-		for (int i = 0; i < this.dimension; i++) {
-			Corner c = new Corner(this.dimension, currentPosition.coordinates, i);
-			if (!result.contains(c)) {
-				this.recursiveWalk(c, result);
-				noWay = false;
-			}
-		}
-		if (noWay) {
-			for (int i = 0; i < result.size(); i++) {
-				System.out.println(result.get(i).toString());
-			}
-		}
-	}
-
-	public void recursiveWalk() {
-		ArrayList<Corner> result = new ArrayList<Corner>();
-		this.recursiveWalk(new Corner(this.dimension), result);
-	}
-
-	public void iterativeWalk() {
-		Queue<Corner> result = new LinkedBlockingQueue<Corner>();
-		Corner currentPosition = new Corner(this.dimension);
-		while (true){
-			boolean noWay = true;
-			result.add(currentPosition);
-			for (int i = 0; i < this.dimension; i++) {
-				Corner c = new Corner(this.dimension, currentPosition.coordinates, i);
-				if (!result.contains(c)) {
-					noWay = false;
-					currentPosition = c;
-					break;
+		// Check the difference between two corner
+		public static int delta(Corner c1, Corner c2) {
+			int difference = 0;
+			for (int i = 0; i < c1.dimension; i++) {
+				if (c1.coordinates[i] != c2.coordinates[i]) {
+					difference++;
 				}
 			}
-			if (noWay) {
-				Corner o;
-				while ((o = result.poll()) != null){
-					System.out.println(o.toString());
-				}
-				break;
+			return difference;
+		}
+
+	}
+
+	/*
+	 * ----------------------------------------------- Recursive Version
+	 * -----------------------------------------------
+	 */
+
+	private void recursiveWalk(int dimension, Corner current) {
+		// get next level of the tree
+		dimension--;
+
+		if (dimension >= 0) {
+			// left child of the node
+			this.recursiveWalk(dimension, current);
+
+			// node itself
+			current.move(dimension);
+			System.out.println(current.toString());
+
+			// right child of the node
+			this.recursiveWalk(dimension, current);
+		}
+	}
+
+	public void recursiveWalk(int dimension) {
+		// Initialize the starting point, and print
+		Corner startPoint = new Corner(dimension);
+		System.out.println(startPoint.toString());
+
+		// Launch the recursion
+		this.recursiveWalk(dimension, startPoint);
+	}
+
+	/*
+	 * ----------------------------------------------- Iterative Version
+	 * -----------------------------------------------
+	 */
+
+	public void iterativeWalk(int dimension) {
+		// Initialize the starting point, and print
+		Queue<Corner> points = new LinkedBlockingQueue<Corner>();
+
+		// Initialize the pool
+		int power = 1;
+		for (int i = 0; i < dimension; i++) {
+			power *= 2;
+		}
+		for (int i = 0; i < power; i++) {
+			points.add(new Corner(dimension, i));
+		}
+		System.out.println(points);
+
+		// Print out starting point
+		Corner previous = points.poll();
+		Corner current;
+		System.out.println(previous);
+		while ((current = points.poll()) != null) {
+			int delta = Corner.delta(previous, current);
+			if (delta == 1) {
+				System.out.println(current);
+				previous = current;
+			} else {
+				points.add(current);
 			}
 		}
+
 	}
 
 	public static void main(String[] args) {
-		Hypercube hy = new Hypercube(4);
-		hy.recursiveWalk();
-		hy.iterativeWalk();
+		Hypercube hy = new Hypercube();
+		int n = 4;
+		hy.recursiveWalk(n);
+		System.out.println("-------------");
+		hy.iterativeWalk(n);
+		System.out.println("-------------");
 	}
-	
+
 }

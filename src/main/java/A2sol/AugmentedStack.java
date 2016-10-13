@@ -19,11 +19,15 @@ public class AugmentedStack<T extends Comparable<? super T>> {
 	}
 	
 	public T pop(){
-		T result = data.pop();
-		if (min.peek().equals(result)){
-			min.pop();
+		if (data.isEmpty()){
+			return null;
+		}else{
+			T result = data.pop();
+			if (min.peek().equals(result)) {
+				min.pop();
+			}
+			return result;
 		}
-		return result;
 	}
 	
 	public T getMin(){
@@ -39,8 +43,11 @@ public class AugmentedStack<T extends Comparable<? super T>> {
 	}
 	
 	public T top(){
-		//TODO question
-		return data.peek();
+		if (min.isEmpty()){
+			return null;
+		}else{
+			return data.peek();
+		}
 	}
 	
 	public static void main(String[] args) {
