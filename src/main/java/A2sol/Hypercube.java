@@ -47,22 +47,19 @@ public class Hypercube {
 			return sb.toString();
 		}
 
-		// Check the difference between two corner
-		public static int delta(Corner c1, Corner c2) {
-			int difference = 0;
-			for (int i = 0; i < c1.dimension; i++) {
-				if (c1.coordinates[i] != c2.coordinates[i]) {
-					difference++;
-				}
+		public static Corner addDimension(Corner c, boolean position){
+			Corner obj = new Corner(c.dimension + 1);
+			for (int i = 0; i < c.dimension; i ++){
+				obj.coordinates[i] = c.coordinates[i];
 			}
-			return difference;
+			obj.coordinates[c.dimension] = position;
+			return obj;
 		}
-
+		
 	}
 
 	/*
-	 * ----------------------------------------------- Recursive Version
-	 * -----------------------------------------------
+	 * Recursive Version
 	 */
 
 	private void recursiveWalk(int dimension, Corner current) {
@@ -92,38 +89,36 @@ public class Hypercube {
 	}
 
 	/*
-	 * ----------------------------------------------- Iterative Version
-	 * -----------------------------------------------
+	 * Iterative Version
 	 */
 
 	public void iterativeWalk(int dimension) {
 		// Initialize the starting point, and print
 		Queue<Corner> points = new LinkedBlockingQueue<Corner>();
 
-		// Initialize the pool
-		int power = 1;
-		for (int i = 0; i < dimension; i++) {
-			power *= 2;
-		}
-		for (int i = 0; i < power; i++) {
-			points.add(new Corner(dimension, i));
-		}
-		System.out.println(points);
-
+		// Initialize the queue
+		points.add(new Corner(1,0));
+		points.add(new Corner(1,1));
+		boolean order = true;		
+		
 		// Print out starting point
-		Corner previous = points.poll();
-		Corner current;
-		System.out.println(previous);
-		while ((current = points.poll()) != null) {
-			int delta = Corner.delta(previous, current);
-			if (delta == 1) {
-				System.out.println(current);
-				previous = current;
-			} else {
-				points.add(current);
+		Corner offer;
+		while ((offer = points.poll()) != null){
+			if (offer.dimension == dimension){
+				System.out.println(offer);
+			}else{
+				if (order) {
+					points.add(Corner.addDimension(offer, false));
+					points.add(Corner.addDimension(offer, true));
+				}else{
+					points.add(Corner.addDimension(offer, true));
+					points.add(Corner.addDimension(offer, false));
+				}
+				order = !order;
 			}
 		}
 
+		
 	}
 
 	public static void main(String[] args) {
