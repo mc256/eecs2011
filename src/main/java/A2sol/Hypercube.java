@@ -1,14 +1,30 @@
+/**********************************************************
+ * EECS2011: Fundamentals of Data Structures,  Fall 2016
+ * Assignment 2, Problem 2: Hypercube.java
+ * Student Name: Jun Lin Chen
+ * Student cse account: chen256
+ * Student ID number: 214533111
+ **********************************************************/
 package A2sol;
 
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Hypercube {
-
+	
+	/* ********************* Nested Class ********************* */
+	/**
+	 * This structure records
+	 */
 	static class Corner {
 		boolean[] coordinates;
 		int dimension;
 
+		/**
+		 * Initialize the corner for a dimension.
+		 * This method takes O(n) , where n = dimension
+		 * @param dimension
+		 */
 		public Corner(int dimension) {
 			this.coordinates = new boolean[dimension];
 			for (int i = 0; i < dimension; i++) {
@@ -17,6 +33,12 @@ public class Hypercube {
 			this.dimension = dimension;
 		}
 
+		/**
+		 * Initial the corner for a dimension with coordinates
+		 * This method takes O(n), where n = dimension
+		 * @param dimension
+		 * @param position Decimal type position for the coordinates, will be converted to binary
+		 */
 		public Corner(int dimension, int position) {
 			this(dimension);
 			for (int i = 0; i < dimension; i++) {
@@ -30,6 +52,11 @@ public class Hypercube {
 			}
 		}
 
+		/**
+		 * Move one step in specific dimension
+		 * This method takes O(1)
+		 * @param direction
+		 */
 		public void move(int direction) {
 			this.coordinates[direction] = !this.coordinates[direction];
 		}
@@ -57,11 +84,31 @@ public class Hypercube {
 		}
 		
 	}
+	
+	/**
+	 * A pure queue structure that only supports enqueue and dequeue.
+	 */
+	static class PureQueue<T> {
+		private Queue<T> data = new LinkedBlockingQueue<T>();
+		
+		public void enqueue(T obj){
+			data.add(obj);
+		}
+		
+		public T dequeue(){
+			return data.poll();
+		}
+	}
 
 	/*
 	 * Recursive Version
 	 */
 
+	/**
+	 * Helper method for the recursion
+	 * @param dimension
+	 * @param current
+	 */
 	private void recursiveWalk(int dimension, Corner current) {
 		// get next level of the tree
 		dimension--;
@@ -94,25 +141,25 @@ public class Hypercube {
 
 	public void iterativeWalk(int dimension) {
 		// Initialize the starting point, and print
-		Queue<Corner> points = new LinkedBlockingQueue<Corner>();
+		PureQueue<Corner> points = new PureQueue<Corner>();
 
 		// Initialize the queue
-		points.add(new Corner(1,0));
-		points.add(new Corner(1,1));
+		points.enqueue(new Corner(1,0));
+		points.enqueue(new Corner(1,1));
 		boolean order = true;		
 		
 		// Print out starting point
 		Corner offer;
-		while ((offer = points.poll()) != null){
+		while ((offer = points.dequeue()) != null){
 			if (offer.dimension == dimension){
-				System.out.println(offer);
+				System.out.println(offer.toString());
 			}else{
 				if (order) {
-					points.add(Corner.addDimension(offer, false));
-					points.add(Corner.addDimension(offer, true));
+					points.enqueue(Corner.addDimension(offer, false));
+					points.enqueue(Corner.addDimension(offer, true));
 				}else{
-					points.add(Corner.addDimension(offer, true));
-					points.add(Corner.addDimension(offer, false));
+					points.enqueue(Corner.addDimension(offer, true));
+					points.enqueue(Corner.addDimension(offer, false));
 				}
 				order = !order;
 			}
@@ -123,7 +170,7 @@ public class Hypercube {
 
 	public static void main(String[] args) {
 		Hypercube hy = new Hypercube();
-		int n = 4;
+		int n = 20;
 		hy.recursiveWalk(n);
 		System.out.println("-------------");
 		hy.iterativeWalk(n);

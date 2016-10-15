@@ -1,3 +1,10 @@
+/**********************************************************
+ * EECS2011: Fundamentals of Data Structures,  Fall 2016
+ * Assignment 2, Problem 3: AugmentedStack.java
+ * Student Name: Jun Lin Chen
+ * Student cse account: chen256
+ * Student ID number: 214533111
+ **********************************************************/
 package A2sol;
 
 import java.util.Stack;
