@@ -8,11 +8,12 @@
 package A2sol;
 
 import java.util.Queue;
+import java.util.Scanner;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Hypercube {
-	
-	/* ********************* Nested Class ********************* */
+
+	/* ************* Nested Class ************* */
 	/**
 	 * This structure records
 	 */
@@ -21,8 +22,9 @@ public class Hypercube {
 		int dimension;
 
 		/**
-		 * Initialize the corner for a dimension.
-		 * This method takes O(n) , where n = dimension
+		 * Initialize the corner for a dimension. This method takes O(n) , where
+		 * n = dimension
+		 * 
 		 * @param dimension
 		 */
 		public Corner(int dimension) {
@@ -34,10 +36,13 @@ public class Hypercube {
 		}
 
 		/**
-		 * Initial the corner for a dimension with coordinates
-		 * This method takes O(n), where n = dimension
+		 * Initial the corner for a dimension with coordinates This method takes
+		 * O(n), where n = dimension
+		 * 
 		 * @param dimension
-		 * @param position Decimal type position for the coordinates, will be converted to binary
+		 * @param position
+		 *            Decimal type position for the coordinates, will be
+		 *            converted to binary
 		 */
 		public Corner(int dimension, int position) {
 			this(dimension);
@@ -53,14 +58,21 @@ public class Hypercube {
 		}
 
 		/**
-		 * Move one step in specific dimension
-		 * This method takes O(1)
+		 * Move one step in specific dimension This method takes a constant
+		 * time.
+		 * 
 		 * @param direction
 		 */
 		public void move(int direction) {
 			this.coordinates[direction] = !this.coordinates[direction];
 		}
 
+		/**
+		 * This method convert the boolean coordinates to a String. This method
+		 * takes O(n), where n = dimension
+		 * 
+		 * @see java.lang.Object#toString()
+		 */
 		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
@@ -74,40 +86,49 @@ public class Hypercube {
 			return sb.toString();
 		}
 
-		public static Corner addDimension(Corner c, boolean position){
+		/**
+		 * 
+		 * This method takes O(n), where n = the new dimension
+		 * 
+		 * @param c
+		 * @param position
+		 * @return
+		 */
+		public static Corner addDimension(Corner c, boolean position) {
 			Corner obj = new Corner(c.dimension + 1);
-			for (int i = 0; i < c.dimension; i ++){
+			for (int i = 0; i < c.dimension; i++) {
 				obj.coordinates[i] = c.coordinates[i];
 			}
 			obj.coordinates[c.dimension] = position;
 			return obj;
 		}
-		
+
 	}
-	
+
 	/**
 	 * A pure queue structure that only supports enqueue and dequeue.
 	 */
 	static class PureQueue<T> {
 		private Queue<T> data = new LinkedBlockingQueue<T>();
-		
-		public void enqueue(T obj){
+
+		public void enqueue(T obj) {
 			data.add(obj);
 		}
-		
-		public T dequeue(){
+
+		public T dequeue() {
 			return data.poll();
 		}
 	}
 
-	/*
-	 * Recursive Version
-	 */
 
+	/* ************* Recursive Approach  ************* */
 	/**
-	 * Helper method for the recursion
+	 * Helper method for the recursion.
+	 * 
 	 * @param dimension
+	 *            current level in the binary tree.
 	 * @param current
+	 *            current corner in the hypercube system.
 	 */
 	private void recursiveWalk(int dimension, Corner current) {
 		// get next level of the tree
@@ -118,7 +139,9 @@ public class Hypercube {
 			this.recursiveWalk(dimension, current);
 
 			// node itself
+			// move one step
 			current.move(dimension);
+			// print out the corner
 			System.out.println(current.toString());
 
 			// right child of the node
@@ -126,6 +149,13 @@ public class Hypercube {
 		}
 	}
 
+	/**
+	 * Recursive approach for the problem. This method use a binary tree to
+	 * ensure the correctness of each step (As I have mentioned in the PDF).This
+	 * method takes O(n * 2^n) time, where n is the dimension.
+	 * 
+	 * @param dimension
+	 */
 	public void recursiveWalk(int dimension) {
 		// Initialize the starting point, and print
 		Corner startPoint = new Corner(dimension);
@@ -135,29 +165,35 @@ public class Hypercube {
 		this.recursiveWalk(dimension, startPoint);
 	}
 
-	/*
-	 * Iterative Version
+	/* ************* Iterative Approach  ************* */
+	/**
+	 * Iterative approach for the problem. This method constructs the result for
+	 * dimension 1 up to n. and print out the results for n. This method takes
+	 * O((n + 1/2) * 2 ^(n + 1)) time.
+	 * 
+	 * @param dimension
 	 */
-
 	public void iterativeWalk(int dimension) {
 		// Initialize the starting point, and print
 		PureQueue<Corner> points = new PureQueue<Corner>();
 
-		// Initialize the queue
-		points.enqueue(new Corner(1,0));
-		points.enqueue(new Corner(1,1));
-		boolean order = true;		
-		
-		// Print out starting point
+		// Initialize the queue with the solution for n = 1
+		points.enqueue(new Corner(1, 0));
+		points.enqueue(new Corner(1, 1));
+		boolean order = true;
+
 		Corner offer;
-		while ((offer = points.dequeue()) != null){
-			if (offer.dimension == dimension){
+		while ((offer = points.dequeue()) != null) {
+			// Print out starting point
+			if (offer.dimension == dimension) {
 				System.out.println(offer.toString());
-			}else{
+			} else {
 				if (order) {
+					// Normal version
 					points.enqueue(Corner.addDimension(offer, false));
 					points.enqueue(Corner.addDimension(offer, true));
-				}else{
+				} else {
+					// Inverted version
 					points.enqueue(Corner.addDimension(offer, true));
 					points.enqueue(Corner.addDimension(offer, false));
 				}
@@ -165,14 +201,23 @@ public class Hypercube {
 			}
 		}
 
-		
 	}
 
+	/* ************* Main Method ************* */
 	public static void main(String[] args) {
 		Hypercube hy = new Hypercube();
-		int n = 20;
+
+		System.out.println("Enter dimension:");
+		Scanner in = new Scanner(System.in);
+		int n = in.nextInt();
+		in.close();
+
+		System.out.println("-------------");
+		System.out.println("recursiveWalk:");
 		hy.recursiveWalk(n);
 		System.out.println("-------------");
+
+		System.out.println("iterativeWalk:");
 		hy.iterativeWalk(n);
 		System.out.println("-------------");
 	}
