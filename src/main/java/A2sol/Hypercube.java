@@ -120,8 +120,7 @@ public class Hypercube {
 		}
 	}
 
-
-	/* ************* Recursive Approach  ************* */
+	/* ************* Recursive Approach ************* */
 	/**
 	 * Helper method for the recursion.
 	 * 
@@ -134,16 +133,18 @@ public class Hypercube {
 		// get next level of the tree
 		dimension--;
 
-		if (dimension >= 0) {
+		if (dimension > 0) {
 			// left child of the node
 			this.recursiveWalk(dimension, current);
-
-			// node itself
-			// move one step
-			current.move(dimension);
-			// print out the corner
-			System.out.println(current.toString());
-
+		}
+		
+		// node itself
+		// move one step
+		current.move(dimension);
+		// print out the corner
+		System.out.println(current.toString());
+		
+		if (dimension > 0) {
 			// right child of the node
 			this.recursiveWalk(dimension, current);
 		}
@@ -165,7 +166,7 @@ public class Hypercube {
 		this.recursiveWalk(dimension, startPoint);
 	}
 
-	/* ************* Iterative Approach  ************* */
+	/* ************* Iterative Approach ************* */
 	/**
 	 * Iterative approach for the problem. This method constructs the result for
 	 * dimension 1 up to n. and print out the results for n. This method takes
