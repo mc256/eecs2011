@@ -20,23 +20,23 @@ public class CardShuffle {
 
 		public void CardShuffle(Node<T> middle) {
 			Node<T> pointer1 = begin;
-			Node<T> pointer2 = middle.next;
-			middle.next = null;
+			Node<T> pointer2 = middle.getNext();
+			middle.setNext(null);
 			
 			while(pointer2 != null){
-				Node<T> temp1 = pointer1.next;
-				Node<T> temp2 = pointer2.next;
+				Node<T> temp1 = pointer1.getNext();
+				Node<T> temp2 = pointer2.getNext();
 				
-				pointer1.next = pointer2;
+				pointer1.setNext(pointer2);
 				pointer1 = temp1;
 				
-				pointer2.next = pointer1;
+				pointer2.setNext(pointer1);
 				pointer2 = temp2;
 			}
 		}
 
 		public Node<T> getLast() {
-			return end;
+			return this.end;
 		}
 
 		@Override
@@ -59,12 +59,42 @@ public class CardShuffle {
 	}
 
 	public static class Node<T> {
-		public T data;
-		public Node<T> next;
+		private T data;
+		private Node<T> next;
 
 		public Node(T data) {
 			this.data = data;
 		}
+
+		/**
+		 * @return the data
+		 */
+		public T getData() {
+			return data;
+		}
+
+		/**
+		 * @return the next
+		 */
+		public Node<T> getNext() {
+			return next;
+		}
+
+		/**
+		 * @param data the data to set
+		 */
+		public void setData(T data) {
+			this.data = data;
+		}
+
+		/**
+		 * @param next the next to set
+		 */
+		public void setNext(Node<T> next) {
+			this.next = next;
+		}
+		
+		
 	}
 
 	public static void main(String[] args) {
