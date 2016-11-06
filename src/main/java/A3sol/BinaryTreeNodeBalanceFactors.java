@@ -5,15 +5,31 @@ public class BinaryTreeNodeBalanceFactors {
 	public static class LinkedBinaryTree<T> {
 		public Node<T> root;
 
+		public LinkedBinaryTree(T[] bfsAarray) {
+			this.root = bfsArrayToTree(bfsAarray, 0);
+		}
+
+		private Node<T> bfsArrayToTree(T[] array, int current) {
+			if (current < array.length && array[current] != null) {
+				return new Node<T>(array[current], this.bfsArrayToTree(array, 2 * current + 1), this.bfsArrayToTree(array, 2 * current + 2));
+			} else {
+				return null;
+			}
+		}
+
 		private int printBalanceFactor(Node<T> current) {
+			// Euler tour
 			if (current == null) {
+				// Visit External
 				return 0;
 			} else {
+				// Visit left
 				int leftHeight = this.printBalanceFactor(current.getLeft());
+				// Visit below
 				int rightHeight = this.printBalanceFactor(current.getRight());
-
-				System.out.printf("(%s,%d:%d)\n", current.getElement(), leftHeight, rightHeight);
-
+				// Visit right
+				System.out.printf("(%s,%d)\n", current.getElement(), rightHeight - leftHeight);
+				// Return result
 				return leftHeight > rightHeight ? leftHeight + 1 : rightHeight + 1;
 			}
 		}
@@ -22,32 +38,17 @@ public class BinaryTreeNodeBalanceFactors {
 			this.printBalanceFactor(this.root);
 		}
 
-		private Node<T> bfsArrayToTree(T[] array, int current, Node<T> parent) {
-			if (current < array.length && array[current] != null) {
-				Node<T> node = new Node<T>(array[current]);
-				node.setParent(parent);
-				node.setLeft(this.bfsArrayToTree(array, 2 * current + 1, node));
-				node.setRight(this.bfsArrayToTree(array, 2 * current + 2, node));
-				return node;
-			} else {
-				return null;
-			}
-		}
-
-		public LinkedBinaryTree(T[] bfsAarray) {
-			this.root = bfsArrayToTree(bfsAarray, 0, null);
-		}
-
 	}
 
 	public static class Node<T> {
 		private T element;
-		private Node<T> parent;
 		private Node<T> left;
 		private Node<T> right;
 
-		public Node(T element) {
+		public Node(T element, Node<T> left, Node<T> right) {
 			this.element = element;
+			this.left = left;
+			this.right = right;
 		}
 
 		/**
@@ -55,13 +56,6 @@ public class BinaryTreeNodeBalanceFactors {
 		 */
 		public T getElement() {
 			return element;
-		}
-
-		/**
-		 * @return the parent
-		 */
-		public Node<T> getParent() {
-			return parent;
 		}
 
 		/**
@@ -84,14 +78,6 @@ public class BinaryTreeNodeBalanceFactors {
 		 */
 		public void setElement(T element) {
 			this.element = element;
-		}
-
-		/**
-		 * @param parent
-		 *            the parent to set
-		 */
-		public void setParent(Node<T> parent) {
-			this.parent = parent;
 		}
 
 		/**
@@ -153,11 +139,23 @@ public class BinaryTreeNodeBalanceFactors {
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		String[] bfsTree = { "A", "B", "C", "D", "E", "F", null, "H", null, "J", "K", "L", null, null, null };
-		printBFSTree(bfsTree);
-		LinkedBinaryTree<String> tree = new LinkedBinaryTree<String>(bfsTree);
+		// You must provide a complete binary tree, but the "null" node and its
+		// subtree will not be built in the data structure
+
+		LinkedBinaryTree<String> tree;
+		String[] bfsTree1 = { "A", "B", "C", "D", "E", "F", null, "H", null, "J", "K", "L", null, null, null };
+		String[] bfsTree2 = { "B", "A", "D", null, null, "C", "E" };
+
+		printBFSTree(bfsTree1);
+		tree = new LinkedBinaryTree<String>(bfsTree1);
 		tree.printBalanceFactor();
+		System.out.println("-------------------------");
+
+		printBFSTree(bfsTree2);
+		tree = new LinkedBinaryTree<String>(bfsTree2);
+		tree.printBalanceFactor();
+		System.out.println("-------------------------");
+
 	}
 
 }
