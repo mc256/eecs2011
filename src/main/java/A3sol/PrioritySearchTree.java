@@ -95,11 +95,8 @@ public class PrioritySearchTree {
 	public void printTree() {
 		StringBuilder sb = new StringBuilder();
 		// Do some necessary calculation first
-		int indent = 1;
-		int remain = this.nodes.length;
-		while ((remain /= 2) != 0) {
-			indent *= 2;
-		}
+		
+		int indent = (this.nodes.length + 1)/2;
 		int currentStage = 2;
 		boolean newLine = false;
 		sb.append(String.format("%" + (12 * (indent - 1)) + "s", ""));
@@ -240,6 +237,7 @@ public class PrioritySearchTree {
 		PrioritySearchTree T;
 		Point[] S1 = { new Point("p1", 1, 8), new Point("p2", 2, 7), new Point("p3", 3, 6), new Point("p4", 4, 5), new Point("p5", 5, 4), new Point("p6", 6, 3), new Point("p7", 7, 2), new Point("p8", 8, 1) };
 		Point[] S2 = { new Point("p1", -8, 3), new Point("p2", -7, 1), new Point("p3", -1, 6), new Point("p4", 2, 4), new Point("p5", 4, 8), new Point("p6", 5, 9), new Point("p7", 7, 1), new Point("p8", 9, 7) };
+		Point[] S3 = { new Point("p1", -8, 3), new Point("p2", -7, 1)};
 
 		System.out.println();
 		T = new PrioritySearchTree(S1);
@@ -249,6 +247,12 @@ public class PrioritySearchTree {
 
 		System.out.println();
 		T = new PrioritySearchTree(S2);
+		T.printTree();
+		T.prioritySearch();
+		T.printTree();
+		
+		System.out.println();
+		T = new PrioritySearchTree(S3);
 		T.printTree();
 		T.prioritySearch();
 		T.printTree();
