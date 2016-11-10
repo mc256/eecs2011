@@ -1,3 +1,10 @@
+/**********************************************************
+ * EECS2011: Fundamentals of Data Structures,  Fall 2016
+ * Assignment 3, Problem 3: PrioritySearchTree.java
+ * Student Name: Jun Lin Chen
+ * Student cse account: chen256
+ * Student ID number: 214533111
+ **********************************************************/
 package A3sol;
 
 public class PrioritySearchTree {
@@ -24,7 +31,7 @@ public class PrioritySearchTree {
 
 	// --------------------------- IMPORTANT -----------------------------------
 	/**
-	 * Doing priority search for the tree
+	 * Doing priority search for the tree. This method takes O(n*log(n)) time.
 	 */
 	public void prioritySearch() {
 

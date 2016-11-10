@@ -1,3 +1,10 @@
+/**********************************************************
+ * EECS2011: Fundamentals of Data Structures,  Fall 2016
+ * Assignment 3, Problem 1: CardShuffle.java
+ * Student Name: Jun Lin Chen
+ * Student cse account: chen256
+ * Student ID number: 214533111
+ **********************************************************/
 package A3sol;
 
 import java.util.Scanner;
@@ -25,7 +32,7 @@ public class CardShuffle {
 
 		// --------------------------- IMPORTANT ---------------------------
 		/**
-		 * Shuffle the list. This method takes O(1) memory.
+		 * Shuffle the list. This method takes O(1) memory. And it uses O(n) time. 
 		 * 
 		 * @param middle
 		 *            the middle object of the list. If the list if 2n elements,

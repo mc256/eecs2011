@@ -1,3 +1,10 @@
+/**********************************************************
+ * EECS2011: Fundamentals of Data Structures,  Fall 2016
+ * Assignment 3, Problem 2: BinaryTreeNodeBalanceFactors.java
+ * Student Name: Jun Lin Chen
+ * Student cse account: chen256
+ * Student ID number: 214533111
+ **********************************************************/
 package A3sol;
 
 import java.util.Scanner;
@@ -41,7 +48,7 @@ public class BinaryTreeNodeBalanceFactors {
 		// --------------------------- IMPORTANT ---------------------------
 		/**
 		 * This (helper) method will print out the balance factor of the binary
-		 * tree. It is just a very simple Euler tour procedure.
+		 * tree. It is just a very simple Euler tour procedure. This method takes O(2^n).
 		 * 
 		 * @param current
 		 *            the node that the program is handling
