@@ -5,6 +5,14 @@ public class PrioritySearchTree {
 	private Point[] nodes;
 	private int height;
 
+	/**
+	 * Constructor for this priority search tree. build the complete binary from
+	 * the leaves
+	 * 
+	 * @param leaves
+	 *            array of Point class, precondition: the length of the array
+	 *            should be 2^n (n is and integer and n > 0)
+	 */
 	public PrioritySearchTree(Point[] leaves) {
 		// Say prerequisite
 		this.nodes = new Point[leaves.length * 2 - 1];
@@ -14,6 +22,10 @@ public class PrioritySearchTree {
 		this.height = this.log2(leaves.length) + 1;
 	}
 
+	// --------------------------- IMPORTANT -----------------------------------
+	/**
+	 * Doing priority search for the tree
+	 */
 	public void prioritySearch() {
 
 		int lowerLimit = this.pow2(this.height - 2);
@@ -24,6 +36,9 @@ public class PrioritySearchTree {
 		lowerLimit--;
 		upperLimit--;
 
+		// These loops iterate through all the inner nodes (included root). It
+		// is similar to the bubble sort that move the correct element one level
+		// up per loop.
 		for (int i = 0; i < searchCount; i++) {
 			for (int j = lowerLimit; j < upperLimit; j++) {
 				if (this.nodes[j] == null) {
@@ -52,9 +67,10 @@ public class PrioritySearchTree {
 						}
 					}
 
-					// Move
+					// Move the node
 					if (moveLeft) {
 						this.nodes[j] = new Point(left);
+						// We cannot not move the leaves
 						if (left.isLeaf()) {
 							left.setUsed(true);
 						} else {
@@ -63,6 +79,7 @@ public class PrioritySearchTree {
 					}
 					if (moveRight) {
 						this.nodes[j] = new Point(right);
+						// We cannot not move the leaves
 						if (right.isLeaf()) {
 							right.setUsed(true);
 						} else {
@@ -76,55 +93,40 @@ public class PrioritySearchTree {
 		}
 	}
 
-	private int log2(int number) {
+	/**
+	 * find the number = log(n)
+	 * 
+	 * @param n
+	 *            need to calculate
+	 * @precondition n must equals to 2^n
+	 * @return log(n) on base 2
+	 */
+	private int log2(int n) {
 		int result = 0;
-		while ((number /= 2) != 0) {
+		while ((n /= 2) != 0) {
 			result++;
 		}
 		return result;
 	}
 
-	private int pow2(int number) {
+	/**
+	 * find the number = 2^n
+	 * 
+	 * @param n
+	 *            need to calculate
+	 * @return 2^n
+	 */
+	private int pow2(int n) {
 		int result = 1;
-		for (int i = 1; i <= number; i++) {
+		for (int i = 1; i <= n; i++) {
 			result *= 2;
 		}
 		return result;
 	}
 
-	public void printTree() {
-		StringBuilder sb = new StringBuilder();
-		// Do some necessary calculation first
-		
-		int indent = (this.nodes.length + 1)/2;
-		int currentStage = 2;
-		boolean newLine = false;
-		sb.append(String.format("%" + (12 * (indent - 1)) + "s", ""));
-		for (int i = 0; i < this.nodes.length; i++) {
-			// Start a new line
-			if (newLine) {
-				newLine = false;
-				currentStage *= 2;
-				sb.append("\n");
-				indent /= 2;
-				sb.append(String.format("%" + (12 * (indent - 1) + 1) + "s", ""));
-			}
-			// Print element
-			if (this.nodes[i] == null) {
-				sb.append("[   null   ]");
-			} else {
-				sb.append(String.format("%-12s", this.nodes[i].toString()));
-			}
-			// If not a new line then print the blank between elements
-			if ((currentStage - 2) == i) {
-				newLine = true;
-			} else {
-				sb.append(String.format("%" + (12 * (indent * 2 - 1)) + "s", ""));
-			}
-		}
-		System.out.printf("%s\n", sb.toString());
-	}
-
+	// ================================================
+	// Point inner class - BEGIN
+	// ------------------------------------------------
 	public static class Point {
 		private boolean used;
 		private boolean leaf;
@@ -132,6 +134,13 @@ public class PrioritySearchTree {
 		private int y;
 		private String name;
 
+		/**
+		 * Constructor. designed for the leaves
+		 * 
+		 * @param name
+		 * @param x
+		 * @param y
+		 */
 		public Point(String name, int x, int y) {
 			this.leaf = true;
 			this.used = false;
@@ -140,6 +149,10 @@ public class PrioritySearchTree {
 			this.name = name;
 		}
 
+		/**
+		 * Constructor. designed for copying the point
+		 * @param o
+		 */
 		public Point(Point o) {
 			this.leaf = false;
 			this.used = false;
@@ -225,35 +238,100 @@ public class PrioritySearchTree {
 
 		@Override
 		public String toString() {
-			if (this.leaf){
-				return String.format("[%s=(%2d,%2d)]", this.name,this.x,this.y);
+			if (this.leaf) {
+				return String.format("[%s=(%2d,%2d)]", this.name, this.x, this.y);
 			}
 			return String.format("[%-10s]", this.name);
-			
+
 		}
 	}
 
+	// ------------------------------------------------
+	// Point inner class - END
+	// ================================================
+
+	
+
+	// ================================================
+	// The printTree() method are quite long.
+	//
+	// I just want to visualize the tree that we given
+	// in a "good" style, so that we can test it easily.
+	// ------------------------------------------------
+	public void printTree() {
+		//
+		// But I just want to show you the complete tree.
+		StringBuilder sb = new StringBuilder();
+		// Do some necessary calculation first
+
+		int indent = (this.nodes.length + 1) / 2;
+		int currentStage = 2;
+		boolean newLine = false;
+		sb.append(generateSpace(12 * (indent - 1)));
+		for (int i = 0; i < this.nodes.length; i++) {
+			// Start a new line
+			if (newLine) {
+				newLine = false;
+				currentStage *= 2;
+				sb.append("\n");
+				indent /= 2;
+				sb.append(generateSpace(12 * (indent - 1) + 1));
+			}
+			// Print element
+			if (this.nodes[i] == null) {
+				sb.append("[   null   ]");
+			} else {
+				sb.append(String.format("%-12s", this.nodes[i].toString()));
+			}
+			// If not a new line then print the blank between elements
+			if ((currentStage - 2) == i) {
+				newLine = true;
+			} else {
+				sb.append(generateSpace(12 * (indent * 2 - 1)));
+			}
+		}
+		System.out.printf("%s\n", sb.toString());
+	}
+
+	private String generateSpace(int count) {
+		return String.format("%" + count + "s", "");
+	}
+	// ------------------------------------------------
+	// FINISH printTree() module
+	// ================================================
+
+	
+	/**
+	 * main method for testing
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		PrioritySearchTree T;
-		Point[] S1 = { new Point("p1", 1, 8), new Point("p2", 2, 7), new Point("p3", 3, 6), new Point("p4", 4, 5), new Point("p5", 5, 4), new Point("p6", 6, 3), new Point("p7", 7, 2), new Point("p8", 8, 1) };
-		Point[] S2 = { new Point("p1", -8, 3), new Point("p2", -7, 1), new Point("p3", -1, 6), new Point("p4", 2, 4), new Point("p5", 4, 8), new Point("p6", 5, 9), new Point("p7", 7, 1), new Point("p8", 9, 7) };
-		Point[] S3 = { new Point("p1", -8, 3), new Point("p2", -7, 1)};
+		Point[] S1 = { new Point("p1", 1, 8), new Point("p2", 2, 7), new Point("p3", 3, 6), new Point("p4", 4, 5),
+				new Point("p5", 5, 4), new Point("p6", 6, 3), new Point("p7", 7, 2), new Point("p8", 8, 1) };
+		Point[] S2 = { new Point("p1", -8, 3), new Point("p2", -7, 1), new Point("p3", -1, 6), new Point("p4", 2, 4),
+				new Point("p5", 4, 8), new Point("p6", 5, 9), new Point("p7", 7, 1), new Point("p8", 9, 7) };
+		Point[] S3 = { new Point("p1", -8, 3), new Point("p2", -7, 1) };
 
-		System.out.println();
+		System.out.println("\n\n\n\n==========================================================================================\nBEFORE:\n");
 		T = new PrioritySearchTree(S1);
 		T.printTree();
+		System.out.println("\n\n------------------------------------------------------------------------------------------\nAFTER:\n");
 		T.prioritySearch();
 		T.printTree();
 
-		System.out.println();
+		System.out.println("\n\n\n\n==========================================================================================\nBEFORE:\n");
 		T = new PrioritySearchTree(S2);
 		T.printTree();
+		System.out.println("\n\n------------------------------------------------------------------------------------------\nAFTER:\n");
 		T.prioritySearch();
 		T.printTree();
-		
-		System.out.println();
+
+		System.out.println("\n\n\n\n==========================================================================================\nBEFORE:\n");
 		T = new PrioritySearchTree(S3);
 		T.printTree();
+		System.out.println("\n\n------------------------------------------------------------------------------------------\nAFTER:\n");
 		T.prioritySearch();
 		T.printTree();
 
