@@ -64,8 +64,10 @@ public class BinaryTreeNodeBalanceFactors {
 				int rightHeight = this.printBalanceFactor(current.getRight());
 
 				// Print out the balance factor
-				System.out.printf("(%s,%d)\n", current.getElement(), rightHeight - leftHeight);
-
+				// Do not print leaves, only print the internal nodes
+				if ((leftHeight != 0) || (rightHeight != 0)){
+					System.out.printf("(%s,%d)\n", current.getElement(), rightHeight - leftHeight);
+				}
 				// Return height of the (sub)tree (the root is the current node)
 				return leftHeight > rightHeight ? leftHeight + 1 : rightHeight + 1;
 			}
