@@ -38,8 +38,7 @@ public class BinaryTreeNodeBalanceFactors {
 		 */
 		private Node<T> bfsArrayToTree(T[] array, int current) {
 			if (current < array.length && array[current] != null) {
-				return new Node<T>(array[current], this.bfsArrayToTree(array, 2 * current + 1),
-						this.bfsArrayToTree(array, 2 * current + 2));
+				return new Node<T>(array[current], this.bfsArrayToTree(array, 2 * current + 1), this.bfsArrayToTree(array, 2 * current + 2));
 			} else {
 				return null;
 			}
@@ -48,7 +47,8 @@ public class BinaryTreeNodeBalanceFactors {
 		// --------------------------- IMPORTANT ---------------------------
 		/**
 		 * This (helper) method will print out the balance factor of the binary
-		 * tree. It is just a very simple Euler tour procedure. This method takes O(2^n).
+		 * tree. It is just a very simple Euler tour procedure. This method
+		 * takes O(2^n).
 		 * 
 		 * @param current
 		 *            the node that the program is handling
@@ -65,8 +65,9 @@ public class BinaryTreeNodeBalanceFactors {
 
 				// Print out the balance factor
 				// Do not print leaves, only print the internal nodes
-				if ((leftHeight != 0) || (rightHeight != 0)){
-					System.out.printf("(%s,%d)\n", current.getElement(), rightHeight - leftHeight);
+				if ((leftHeight != 0) || (rightHeight != 0)) {
+					int rawBalanceFactor = rightHeight - leftHeight;
+					System.out.printf("(%s,%d)\n", current.getElement(), (rawBalanceFactor < 0 ? -rawBalanceFactor : rawBalanceFactor));
 				}
 				// Return height of the (sub)tree (the root is the current node)
 				return leftHeight > rightHeight ? leftHeight + 1 : rightHeight + 1;
@@ -168,8 +169,6 @@ public class BinaryTreeNodeBalanceFactors {
 	// Node inner class - END
 	// ================================================
 
-	
-
 	// ================================================
 	// The printTree() method are quite long.
 	//
@@ -220,9 +219,9 @@ public class BinaryTreeNodeBalanceFactors {
 	// FINISH printTree() module
 	// ================================================
 
-	
 	/**
 	 * main method for testing
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -238,6 +237,8 @@ public class BinaryTreeNodeBalanceFactors {
 		// be built in the tree.
 		String[] bfsTree1 = { "A", "B", "C", "D", "E", "F", null, "H", null, "J", "K", "L", null, null, null };
 		String[] bfsTree2 = { "B", "A", "D", null, null, "C", "E" };
+		String[] bfsTree3 = { "A", "B", null, "D", "K", null, null, "H", null, null, "M", null, null, null, null, "J", null, null, null, null, null, "N", null, null, null, null, null, null, null, null, null, };
+		String[] bfsTree4 = { "A", "B", "C", };
 
 		tree = new LinkedBinaryTree<String>(bfsTree1);
 		printTree(bfsTree1);
@@ -246,6 +247,16 @@ public class BinaryTreeNodeBalanceFactors {
 
 		tree = new LinkedBinaryTree<String>(bfsTree2);
 		printTree(bfsTree2);
+		tree.printBalanceFactor();
+		System.out.println("-------------------------");
+
+		tree = new LinkedBinaryTree<String>(bfsTree3);
+		printTree(bfsTree3);
+		tree.printBalanceFactor();
+		System.out.println("-------------------------");
+
+		tree = new LinkedBinaryTree<String>(bfsTree4);
+		printTree(bfsTree4);
 		tree.printBalanceFactor();
 		System.out.println("-------------------------");
 
