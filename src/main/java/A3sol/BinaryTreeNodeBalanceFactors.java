@@ -177,8 +177,6 @@ public class BinaryTreeNodeBalanceFactors {
 	// ------------------------------------------------
 
 	public static void printTree(String[] bfsArray) {
-		//
-		// But I just want to show you the complete tree.
 		StringBuilder sb = new StringBuilder();
 		// Do some necessary calculation first
 
@@ -232,7 +230,7 @@ public class BinaryTreeNodeBalanceFactors {
 
 		LinkedBinaryTree<String> tree;
 
-		// You must provide a complete binary tree as array.
+		// You must provide a complete binary tree as array in order of BFS.
 		// The null node and the subtree of the null node (if exists), will not
 		// be built in the tree.
 		String[] bfsTree1 = { "A", "B", "C", "D", "E", "F", null, "H", null, "J", "K", "L", null, null, null };

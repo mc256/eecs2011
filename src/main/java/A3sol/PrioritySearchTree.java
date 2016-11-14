@@ -34,7 +34,7 @@ public class PrioritySearchTree {
 	 * Bottom-Up heapify for the tree. This method takes O(n) time.
 	 */
 	public void prioritySearch() {
-		// Calculate the largest inner node index and also adjustment to the
+		// Calculate the largest inner node index and also adjust to the
 		// array from index 0
 		int upperLimit = this.leavesCount - 2;
 
@@ -45,16 +45,16 @@ public class PrioritySearchTree {
 	}
 
 	/**
-	 * Recursive swap method, takes O(log(n)) time.
+	 * Recursive swap method, takes O(log(n)) time. But a lower average.
 	 * 
 	 * @param current
 	 */
 	private void swap(int current) {
-		//Get the positions
+		// Get the positions
 		int left = Point.leftChild(current);
 		int right = Point.rightChild(current);
-		
-		//Compare two children
+
+		// Compare two children
 		int compare = Point.max(this.nodes[left], this.nodes[right]);
 		if (compare == -1) {
 			// Left child should be moved up
@@ -64,7 +64,7 @@ public class PrioritySearchTree {
 				this.nodes[left].setUsed(true);
 			} else {
 				this.nodes[left] = null;
-				//recursively swap child node 
+				// recursively swap child node
 				swap(left);
 			}
 		} else if (compare == 1) {
@@ -75,7 +75,7 @@ public class PrioritySearchTree {
 				this.nodes[right].setUsed(true);
 			} else {
 				this.nodes[right] = null;
-				//recursively swap child node
+				// recursively swap child node
 				swap(right);
 			}
 		}
@@ -279,8 +279,6 @@ public class PrioritySearchTree {
 	// in a "good" style, so that we can test it easily.
 	// ------------------------------------------------
 	public void printTree() {
-		//
-		// But I just want to show you the complete tree.
 		StringBuilder sb = new StringBuilder();
 		// Do some necessary calculation first
 
@@ -327,6 +325,10 @@ public class PrioritySearchTree {
 	 */
 	public static void main(String[] args) {
 		PrioritySearchTree T;
+
+		// You must provide a complete binary tree as array in order of BFS.
+		// The null node and the subtree of the null node (if exists), will not
+		// be built in the tree.
 		Point[] S1 = { new Point("p1", 1, 8), new Point("p2", 2, 7), new Point("p3", 3, 6), new Point("p4", 4, 5), new Point("p5", 5, 4), new Point("p6", 6, 3), new Point("p7", 7, 2), new Point("p8", 8, 1) };
 		Point[] S2 = { new Point("p1", -8, 3), new Point("p2", -7, 1), new Point("p3", -1, 6), new Point("p4", 2, 4), new Point("p5", 4, 8), new Point("p6", 5, 9), new Point("p7", 7, 1), new Point("p8", 9, 7) };
 		Point[] S3 = { new Point("p1", -8, 3), new Point("p2", -7, 1) };
