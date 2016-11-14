@@ -10,7 +10,7 @@ package A3sol;
 public class PrioritySearchTree {
 
 	private Point[] nodes;
-	private int height;
+	private int leavesCount;
 
 	/**
 	 * Constructor for this priority search tree. build the complete binary from
@@ -26,109 +26,59 @@ public class PrioritySearchTree {
 		for (int i = 0; i < leaves.length; i++) {
 			this.nodes[i + leaves.length - 1] = leaves[i];
 		}
-		this.height = this.log2(leaves.length) + 1;
+		this.leavesCount = leaves.length;
 	}
 
 	// --------------------------- IMPORTANT -----------------------------------
 	/**
-	 * Doing priority search for the tree. This method takes O(n*log(n)) time.
+	 * Bottom-Up heapify for the tree. This method takes O(n) time.
 	 */
 	public void prioritySearch() {
+		// Calculate the largest inner node index and also adjustment to the
+		// array from index 0
+		int upperLimit = this.leavesCount - 2;
 
-		int lowerLimit = this.pow2(this.height - 2);
-		int upperLimit = lowerLimit * 2;
-		int searchCount = this.height - 1;
+		// These loops iterate through all the inner nodes (included root).
+		for (int i = upperLimit; i >= 0; i--) {
+			swap(i);
+		}
+	}
 
-		// Adjustment to the array from index 0
-		lowerLimit--;
-		upperLimit--;
-
-		// These loops iterate through all the inner nodes (included root). It
-		// is similar to the bubble sort that move the correct element one level
-		// up per loop.
-		for (int i = 0; i < searchCount; i++) {
-			for (int j = lowerLimit; j < upperLimit; j++) {
-				if (this.nodes[j] == null) {
-					// Fetch necessary data
-					Point left = this.nodes[2 * j + 1];
-					Point right = this.nodes[2 * j + 2];
-
-					Integer leftY = (left == null || left.isUsed()) ? null : left.getY();
-					Integer rightY = (right == null || right.isUsed()) ? null : right.getY();
-
-					boolean moveLeft = false;
-					boolean moveRight = false;
-
-					// Compare
-					if (leftY != null && rightY != null) {
-						if (leftY > rightY) {
-							moveLeft = true;
-						} else {
-							moveRight = true;
-						}
-					} else {
-						if (leftY == null && rightY != null) {
-							moveRight = true;
-						} else if (leftY != null && rightY == null) {
-							moveLeft = true;
-						}
-					}
-
-					// Move the node
-					if (moveLeft) {
-						this.nodes[j] = new Point(left);
-						// We cannot not move the leaves
-						if (left.isLeaf()) {
-							left.setUsed(true);
-						} else {
-							this.nodes[2 * j + 1] = null;
-						}
-					}
-					if (moveRight) {
-						this.nodes[j] = new Point(right);
-						// We cannot not move the leaves
-						if (right.isLeaf()) {
-							right.setUsed(true);
-						} else {
-							this.nodes[2 * j + 2] = null;
-						}
-					}
-				}
+	/**
+	 * Recursive swap method, takes O(log(n)) time.
+	 * 
+	 * @param current
+	 */
+	private void swap(int current) {
+		//Get the positions
+		int left = Point.leftChild(current);
+		int right = Point.rightChild(current);
+		
+		//Compare two children
+		int compare = Point.max(this.nodes[left], this.nodes[right]);
+		if (compare == -1) {
+			// Left child should be moved up
+			this.nodes[current] = new Point(this.nodes[left]);
+			// We cannot not move the leaves, so mark it used
+			if (this.nodes[left].isLeaf()) {
+				this.nodes[left].setUsed(true);
+			} else {
+				this.nodes[left] = null;
+				//recursively swap child node 
+				swap(left);
 			}
-
-			lowerLimit /= 2;
+		} else if (compare == 1) {
+			// Right child should be moved up
+			this.nodes[current] = new Point(this.nodes[right]);
+			// We cannot not move the leaves, so mark it used
+			if (this.nodes[right].isLeaf()) {
+				this.nodes[right].setUsed(true);
+			} else {
+				this.nodes[right] = null;
+				//recursively swap child node
+				swap(right);
+			}
 		}
-	}
-
-	/**
-	 * find the number = log(n)
-	 * 
-	 * @param n
-	 *            need to calculate
-	 * @precondition n must equals to 2^n
-	 * @return log(n) on base 2
-	 */
-	private int log2(int n) {
-		int result = 0;
-		while ((n /= 2) != 0) {
-			result++;
-		}
-		return result;
-	}
-
-	/**
-	 * find the number = 2^n
-	 * 
-	 * @param n
-	 *            need to calculate
-	 * @return 2^n
-	 */
-	private int pow2(int n) {
-		int result = 1;
-		for (int i = 1; i <= n; i++) {
-			result *= 2;
-		}
-		return result;
 	}
 
 	// ================================================
@@ -158,6 +108,7 @@ public class PrioritySearchTree {
 
 		/**
 		 * Constructor. designed for copying the point
+		 * 
 		 * @param o
 		 */
 		public Point(Point o) {
@@ -243,21 +194,83 @@ public class PrioritySearchTree {
 			this.name = name;
 		}
 
+		/**
+		 * Print the pointer.
+		 * 
+		 * @see java.lang.Object#toString()
+		 */
 		@Override
 		public String toString() {
 			if (this.leaf) {
 				return String.format("[%s=(%2d,%2d)]", this.name, this.x, this.y);
 			}
 			return String.format("[%-10s]", this.name);
+		}
 
+		/**
+		 * Return the available point with the largest Y value
+		 * 
+		 * @param a
+		 *            one point
+		 * @param b
+		 *            another point
+		 * @return -1 if a is the max, 1 if b is the max, 0 neither
+		 */
+		public static int max(Point a, Point b) {
+			boolean isA = false;
+			boolean isB = false;
+
+			Integer aY = (a == null || a.isUsed()) ? null : a.getY();
+			Integer bY = (b == null || b.isUsed()) ? null : b.getY();
+
+			// Compare
+			if (aY != null && bY != null) {
+				if (aY > bY) {
+					isA = true;
+				} else {
+					isB = true;
+				}
+			} else {
+				if (aY == null && bY != null) {
+					isB = true;
+				} else if (aY != null && bY == null) {
+					isA = true;
+				}
+			}
+			if (isA) {
+				return -1;
+			} else if (isB) {
+				return 1;
+			}
+			return 0;
+		}
+
+		/**
+		 * Calculate the index of the left child for a node in given index
+		 * 
+		 * @param index
+		 *            the parent index
+		 * @return the index of the left child
+		 */
+		public static int leftChild(int index) {
+			return 2 * index + 1;
+		}
+
+		/**
+		 * Calculate the index of the right child for a node in given index
+		 * 
+		 * @param index
+		 *            the parent index
+		 * @return the index of the right child
+		 */
+		public static int rightChild(int index) {
+			return 2 * index + 2;
 		}
 	}
 
 	// ------------------------------------------------
 	// Point inner class - END
 	// ================================================
-
-	
 
 	// ================================================
 	// The printTree() method are quite long.
@@ -307,7 +320,6 @@ public class PrioritySearchTree {
 	// FINISH printTree() module
 	// ================================================
 
-	
 	/**
 	 * main method for testing
 	 * 
@@ -315,10 +327,8 @@ public class PrioritySearchTree {
 	 */
 	public static void main(String[] args) {
 		PrioritySearchTree T;
-		Point[] S1 = { new Point("p1", 1, 8), new Point("p2", 2, 7), new Point("p3", 3, 6), new Point("p4", 4, 5),
-				new Point("p5", 5, 4), new Point("p6", 6, 3), new Point("p7", 7, 2), new Point("p8", 8, 1) };
-		Point[] S2 = { new Point("p1", -8, 3), new Point("p2", -7, 1), new Point("p3", -1, 6), new Point("p4", 2, 4),
-				new Point("p5", 4, 8), new Point("p6", 5, 9), new Point("p7", 7, 1), new Point("p8", 9, 7) };
+		Point[] S1 = { new Point("p1", 1, 8), new Point("p2", 2, 7), new Point("p3", 3, 6), new Point("p4", 4, 5), new Point("p5", 5, 4), new Point("p6", 6, 3), new Point("p7", 7, 2), new Point("p8", 8, 1) };
+		Point[] S2 = { new Point("p1", -8, 3), new Point("p2", -7, 1), new Point("p3", -1, 6), new Point("p4", 2, 4), new Point("p5", 4, 8), new Point("p6", 5, 9), new Point("p7", 7, 1), new Point("p8", 9, 7) };
 		Point[] S3 = { new Point("p1", -8, 3), new Point("p2", -7, 1) };
 
 		System.out.println("\n\n\n\n==========================================================================================\nBEFORE:\n");
@@ -341,7 +351,6 @@ public class PrioritySearchTree {
 		System.out.println("\n\n------------------------------------------------------------------------------------------\nAFTER:\n");
 		T.prioritySearch();
 		T.printTree();
-
 	}
 
 }
