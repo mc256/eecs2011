@@ -6,7 +6,7 @@
  * Student ID number: 214533111
  **********************************************************/
 
-package A1;
+package A1sol;
 
 /**
  * This class is built for windows. And check if windows are overlapping or enclosing.

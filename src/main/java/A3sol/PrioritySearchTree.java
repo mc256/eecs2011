@@ -332,6 +332,8 @@ public class PrioritySearchTree {
 		Point[] S1 = { new Point("p1", 1, 8), new Point("p2", 2, 7), new Point("p3", 3, 6), new Point("p4", 4, 5), new Point("p5", 5, 4), new Point("p6", 6, 3), new Point("p7", 7, 2), new Point("p8", 8, 1) };
 		Point[] S2 = { new Point("p1", -8, 3), new Point("p2", -7, 1), new Point("p3", -1, 6), new Point("p4", 2, 4), new Point("p5", 4, 8), new Point("p6", 5, 9), new Point("p7", 7, 1), new Point("p8", 9, 7) };
 		Point[] S3 = { new Point("p1", -8, 3), new Point("p2", -7, 1) };
+		Point[] S4 = { new Point("A", 1, 3), new Point("B", 2, 1), new Point("C", 3, 88), new Point("D", 4, 4), new Point("E", 5, 8), new Point("F", 6, 79), new Point("G", 7, 1), new Point("H", 8, 7) };
+		Point[] S5 = { new Point("A", 1, 3), new Point("B", 2, 1), new Point("C", 3, 88), new Point("D", 4, 4) };
 
 		System.out.println("\n\n\n\n==========================================================================================\nBEFORE:\n");
 		T = new PrioritySearchTree(S1);
@@ -349,6 +351,20 @@ public class PrioritySearchTree {
 
 		System.out.println("\n\n\n\n==========================================================================================\nBEFORE:\n");
 		T = new PrioritySearchTree(S3);
+		T.printTree();
+		System.out.println("\n\n------------------------------------------------------------------------------------------\nAFTER:\n");
+		T.prioritySearch();
+		T.printTree();
+		
+		System.out.println("\n\n\n\n==========================================================================================\nBEFORE:\n");
+		T = new PrioritySearchTree(S4);
+		T.printTree();
+		System.out.println("\n\n------------------------------------------------------------------------------------------\nAFTER:\n");
+		T.prioritySearch();
+		T.printTree();
+		
+		System.out.println("\n\n\n\n==========================================================================================\nBEFORE:\n");
+		T = new PrioritySearchTree(S5);
 		T.printTree();
 		System.out.println("\n\n------------------------------------------------------------------------------------------\nAFTER:\n");
 		T.prioritySearch();

@@ -6,7 +6,7 @@
  * Student ID number: 214533111
  **********************************************************/
 
-package A1;
+package A1sol;
 
 /**
  * The purpose of this class is to squeeze an array of ints.

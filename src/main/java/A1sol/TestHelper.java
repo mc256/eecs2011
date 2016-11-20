@@ -6,7 +6,7 @@
  * Student ID number: 214533111
  **********************************************************/
 
-package A1;
+package A1sol;
 
 /**
  * The purpose of this class is to provide a converter from an array of ints to an equivalent string

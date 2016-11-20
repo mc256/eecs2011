@@ -6,7 +6,7 @@
  * Student ID number: 214533111
  **********************************************************/
 
-package A1;
+package A1sol;
 
 public class InvalidWindowException extends Exception {
 
