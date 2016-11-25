@@ -48,28 +48,72 @@ public class Problem1 {
 			System.out.printf("B - {%3d,%3d}  - %3d[%3d]\n", bLeft, bRight, bMid, b[bMid]);
 
 			if (a[aMid] < b[bMid]) {
-				// handle A
+				// Possible Range
 				int aLower = aMid;
-				int aUpper = aMid + bMid - 1;
+				int aUpper = aMid + bMid;
 				int bLower = aUpper + 1;
 				int bUpper = a.length + bMid;
-				System.out.printf("A - {%3d,%3d}\n", aLower, aUpper);
-				if (k < aLower) {
-					aRight = aMid - 1;
-				} else if (k > aUpper) {
-					aLeft = aMid + 1;
-				} else {
-					aRight = aMid;
+				
+				//Choose Partitions
+				boolean aTakeLeft, aTakeMid, aTakeRight;
+				boolean bTakeLeft, bTakeMid, bTakeRight;
+				aTakeLeft = aTakeMid = aTakeRight = false;
+				bTakeLeft = bTakeMid = bTakeRight = false;
+				
+				if (k >= aLower && k <= aUpper){
+					aTakeMid = true;
+				}
+				if (k < aLower){
+					aTakeLeft = true;
+				}
+				if (k > aUpper){
+					aTakeRight = true;
+				}
+
+				if (k >= bLower && k <= bUpper){
+					bTakeMid = true;
 				}
 				if (k < bLower){
+					bTakeLeft = true;
+				}
+				if (k > bUpper){
+					bTakeRight = true;
+				}
+				System.out.printf("A %s%s%s - {%3d,%3d}\n", (aTakeLeft?"o":"x"),(aTakeMid?"o":"x"),(aTakeRight?"o":"x"), aLower, aUpper);
+				System.out.printf("B %s%s%s - {%3d,%3d}\n", (bTakeLeft?"o":"x"),(bTakeMid?"o":"x"),(bTakeRight?"o":"x"), bLower, bUpper);
+				
+				//Adjust Range
+				if (aTakeLeft && !aTakeMid && !aTakeRight){
+					aRight = aMid - 1;
+				}
+				if (aTakeLeft && aTakeMid && !aTakeRight){
+					aRight = aMid;
+				}
+				if (!aTakeLeft && aTakeMid && aTakeRight){
+					aLeft = aMid;
+				}
+				if (!aTakeLeft && !aTakeMid && aTakeRight){
+					aLeft = aMid + 1;
+				}
+				
+				
+
+				if (bTakeLeft && !bTakeMid && !bTakeRight){
 					bRight = bMid - 1;
-				}else if (k > bUpper){
-					bLeft = bMid + 1;
-				}else{
+				}
+				if (bTakeLeft && bTakeMid && !bTakeRight){
+					bRight = bMid;
+				}
+				if (!bTakeLeft && bTakeMid && bTakeRight){
 					bLeft = bMid;
 				}
+				if (!bTakeLeft && !bTakeMid && bTakeRight){
+					bLeft = bMid + 1;
+				}
+				
 			} else {
 				// handle B
+				/*
 				int bLower = bMid;
 				int bUpper = bMid + aMid - 1;
 				int aLower = bUpper + 1;
@@ -89,6 +133,7 @@ public class Problem1 {
 				}else{
 					aLeft = aMid;
 				}
+				*/
 			}
 
 			if (aLeft == aRight) {
@@ -107,7 +152,8 @@ public class Problem1 {
 
 		// int s[] = new int[] { 3, 12, 18, 20, 28, 37, 41, 44, 45, 48 };
 		// int t[] = new int[] { 4, 5, 6, 7, 8, 13, 15, 21, 23, 27 };
-		int s[] = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+
+		int s[] = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 		int t[] = new int[] { 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
 
 		// generateSortedArray(s);
@@ -116,11 +162,7 @@ public class Problem1 {
 		System.out.printf("S = %s\n", arrayToString(s));
 		System.out.printf("T = %s\n", arrayToString(t));
 
-		findLargest(s, t, 1);
 		findLargest(s, t, 2);
-		findLargest(s, t, 3);
-		findLargest(s, t, 4);
-		findLargest(s, t, 5);
 	}
 
 }
