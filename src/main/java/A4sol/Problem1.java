@@ -27,178 +27,181 @@ public class Problem1 {
 	}
 
 	public static void findLargest(int[] a, int[] b, int k) {
+		findSmallest(a, b, a.length + b.length + 1 - k);
+	}
+	
+	public static void findSmallest(int[] a, int[] b, int k) {
 		// Declare precondition :
 		// a.length == b.length
 		// 1 <= k <= 2n
 		// two arrays are equal length
-		int aLeft = 0;
-		int aRight = a.length - 1;
-		int bLeft = 0;
-		int bRight = b.length - 1;
 		k--;
+		int length = a.length;
 
-		// First find the corresponding position and confirm the starting point
+		// Initial Search Objects
+		Range aRange = new Range(length);
+		Range bRange = new Range(length);
+
+		Bound aBound, bBound;
 		while (true) {
-			System.out.println("--------------------------------------");
-
-			int aMid = (aLeft + aRight) / 2;
-			int bMid = (bLeft + bRight) / 2;
-
-			System.out.printf("A - {%3d,%3d}  - %3d[%3d]\n", aLeft, aRight, aMid, a[aMid]);
-			System.out.printf("B - {%3d,%3d}  - %3d[%3d]\n", bLeft, bRight, bMid, b[bMid]);
-
-			boolean aTakeLeft, aTakeMid, aTakeRight;
-			boolean bTakeLeft, bTakeMid, bTakeRight;
-			aTakeLeft = aTakeMid = aTakeRight = false;
-			bTakeLeft = bTakeMid = bTakeRight = false;
-
+			// System.out.printf("----------------------------------------------\n");
+			// System.out.printf("A %s \t\t B %s\n", aRange, bRange);
+			// System.out.printf("A %d[%d] \t\t B
+			// %d[%d]\n",a[aRange.getMiddle()],aRange.getMiddle(),
+			// b[bRange.getMiddle()],bRange.getMiddle());
+			int aMid = aRange.getMiddle();
+			int bMid = bRange.getMiddle();
 			if (a[aMid] < b[bMid]) {
-				// Possible Range
-				int aLower = aMid;
-				int aUpper = aMid + bMid;
-				int bLower = aUpper + 1;
-				int bUpper = a.length + bMid;
-
-				// Choose Partitions
-				if (k >= aLower && k <= aUpper) {
-					aTakeMid = true;
-				}
-				if (k < aUpper) {
-					aTakeLeft = true;
-				}
-				if (k > aLower) {
-					aTakeRight = true;
-				}
-
-				if (k >= bLower && k <= bUpper) {
-					bTakeMid = true;
-				}
-				if (k < bUpper) {
-					bTakeLeft = true;
-				}
-				if (k > bLower) {
-					bTakeRight = true;
-				}
-				System.out.printf("A %s%s%s - {%3d,%3d}\n", (aTakeLeft ? "o" : "x"), (aTakeMid ? "o" : "x"), (aTakeRight ? "o" : "x"), aLower, aUpper);
-				System.out.printf("B %s%s%s - {%3d,%3d}\n", (bTakeLeft ? "o" : "x"), (bTakeMid ? "o" : "x"), (bTakeRight ? "o" : "x"), bLower, bUpper);
-
-				// Adjust Range
-				if (!aTakeRight) {
-					aRight = aMid;
-					if (!aTakeMid) {
-						aRight = aMid - 1;
-					}
-				}
-				if (!aTakeLeft) {
-					aLeft = aMid;
-					if (!aTakeMid) {
-						aLeft = aMid + 1;
-					}
-				}
-
-				if (!bTakeRight) {
-					bRight = bMid;
-					if (!bTakeMid) {
-						bRight = bMid - 1;
-					}
-				}
-				if (!bTakeLeft) {
-					bLeft = bMid;
-					if (!bTakeMid) {
-						bLeft = bMid + 1;
-					}
-				}
-
+				aBound = new Bound(aMid, bMid + aMid);
+				bBound = new Bound(aBound.getUpper() + 1, length + bMid);
 			} else {
-				// Possible Range
-				int bLower = bMid;
-				int bUpper = bMid + aMid;
-				int aLower = bUpper + 1;
-				int aUpper = b.length + aMid;
-
-				// Choose Partitions
-				if (k >= aLower && k <= aUpper) {
-					aTakeMid = true;
-				}
-				if (k < aUpper) {
-					aTakeLeft = true;
-				}
-				if (k > aLower) {
-					aTakeRight = true;
-				}
-
-				if (k >= bLower && k <= bUpper) {
-					bTakeMid = true;
-				}
-				if (k < bUpper) {
-					bTakeLeft = true;
-				}
-				if (k > bLower) {
-					bTakeRight = true;
-				}
-				System.out.printf("B %s%s%s - {%3d,%3d}\n", (bTakeLeft ? "o" : "x"), (bTakeMid ? "o" : "x"), (bTakeRight ? "o" : "x"), bLower, bUpper);
-				System.out.printf("A %s%s%s - {%3d,%3d}\n", (aTakeLeft ? "o" : "x"), (aTakeMid ? "o" : "x"), (aTakeRight ? "o" : "x"), aLower, aUpper);
-
-				// adjust Range
-				if (!bTakeRight) {
-					bRight = bMid;
-					if (!bTakeMid) {
-						bRight = bMid - 1;
-					}
-				}
-				if (!bTakeLeft) {
-					bLeft = bMid;
-					if (!bTakeMid) {
-						bLeft = bMid + 1;
-					}
-				}
-
-				if (!aTakeRight) {
-					aRight = aMid;
-					if (!aTakeMid) {
-						aRight = aMid - 1;
-					}
-				}
-				if (!aTakeLeft) {
-					aLeft = aMid;
-					if (!aTakeMid) {
-						aLeft = aMid + 1;
-					}
-				}
+				bBound = new Bound(bMid, aMid + bMid);
+				aBound = new Bound(bBound.getUpper() + 1, length + aMid);
 			}
 
-			if (aLeft == aRight) {
-				if (aTakeMid) {
-					System.out.printf("A:index[%d] - element[%d]\n", aLeft, a[aLeft]);
-					return;
-				}
-				if (bTakeMid) {
-					System.out.printf("B:index[%d] - element[%d]\n", bLeft, b[bLeft]);
-					return;
-				}
+			// System.out.printf("A %s \t\t B %s\n", aBound, bBound);
+			// Adjust Range
+			if (aBound.leftBounded(k)) {
+				aRange.cutLeft(aMid, !aBound.inBound(k));
+			}
+			if (aBound.rightBounded(k)) {
+				aRange.cutRight(aMid, !aBound.inBound(k));
+			}
 
+			if (bBound.leftBounded(k)) {
+				bRange.cutLeft(bMid, !bBound.inBound(k));
 			}
-			if (bLeft == bRight) {
-				if (aTakeMid) {
-					System.out.printf("A:index[%d] - element[%d]\n", aLeft, a[aLeft]);
-					return;
-				}
-				if (bTakeMid) {
-					System.out.printf("B:index[%d] - element[%d]\n", bLeft, b[bLeft]);
-					return;
-				}
+			if (bBound.rightBounded(k)) {
+				bRange.cutRight(bMid, !bBound.inBound(k));
 			}
+
+			// If founded
+			if (aRange.isEmpty()) {
+				System.out.printf("The result is B->%2d[%2d]\n", b[bMid], bMid);
+				return;
+			}
+			if (bRange.isEmpty()) {
+				System.out.printf("The result is A->%2d[%2d]\n", a[aMid], aMid);
+				return;
+			}
+
+		}
+
+	}
+
+	public static class Range {
+		private int left;
+		private int right;
+
+		public Range(int length) {
+			this.left = 0;
+			this.right = length - 1;
+		}
+
+		public int getLength() {
+			int temp = right - left + 1;
+			if (temp > 0) {
+				return temp;
+			} else {
+				return 0;
+			}
+		}
+
+		public boolean isEmpty() {
+			if (this.getLength() == 0) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		public int getMiddle() {
+			return (right + left) / 2;
+		}
+
+		public int getLeft() {
+			return left;
+		}
+
+		public void cutLeft(int middle, boolean removeMiddle) {
+			if (removeMiddle) {
+				this.left = middle + 1;
+			} else {
+				this.left = middle;
+			}
+		}
+
+		public void cutRight(int middle, boolean removeMiddle) {
+			if (removeMiddle) {
+				this.right = middle - 1;
+			} else {
+				this.right = middle;
+			}
+		}
+
+		@Override
+		public String toString() {
+			return String.format("Range[%2d,%2d]", this.left, this.right);
+		}
+	}
+
+	public static class Bound {
+		private int lower;
+		private int upper;
+
+		public Bound(int lower, int upper) {
+			this.lower = lower;
+			this.upper = upper;
+		}
+
+		public boolean inBound(int rank) {
+			if (rank >= this.lower && rank <= this.upper) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		public boolean rightBounded(int rank) {
+			if (rank < this.upper) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		public boolean leftBounded(int rank) {
+			if (rank > this.lower) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		public int getUpper() {
+			return this.upper;
+		}
+
+		public int getLower() {
+			return this.lower;
+		}
+
+		public String toString() {
+			return String.format("Bound[%2d,%2d]", this.lower, this.upper);
 		}
 
 	}
 
 	public static void main(String[] args) {
 
-		//int s[] = new int[] { 3, 12, 18, 20, 28, 37, 41, 44, 45, 48 };
-		//int t[] = new int[] { 4, 5, 6, 7, 8, 13, 15, 21, 23, 27 };
+		// int s[] = new int[] { 3, 12, 18, 20, 28, 37, 41, 44, 45, 48 };
+		// int t[] = new int[] { 4, 5, 6, 7, 8, 13, 15, 21, 23, 27 };
 
-		int s[] = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-		int t[] = new int[] { 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
+		// int s[] = new int[] { 0, 1, 2, 3, 4, 5 };
+		// int t[] = new int[] { 6, 7, 8, 9, 10, 11 };
+
+		int s[] = new int[] { 3, 5, 9, 15, 27, 33, 35, 41, 57, 65 };
+		int t[] = new int[] { 2, 16, 18, 42, 44, 46, 48, 50, 52, 54 };
 
 		// generateSortedArray(s);
 		// generateSortedArray(t);
@@ -206,7 +209,10 @@ public class Problem1 {
 		System.out.printf("S = %s\n", arrayToString(s));
 		System.out.printf("T = %s\n", arrayToString(t));
 
-		findLargest(s, t, 5);
+		findSmallest(s, t, 1);
+		findSmallest(s, t, 6);
+		findSmallest(s, t, 10);
 	}
 
 }
+
