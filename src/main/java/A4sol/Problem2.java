@@ -7,29 +7,28 @@ public class Problem2 {
 		Node<T> root;
 
 		public int countRange(T lower, T upper) {
-			return countRangeNode(this.root, lower, upper);
+			countRangeNode(this.root, lower, upper);
+			return 0;
 		}
 
-		private int countRangeNode(Node<T> n, T lower, T upper) {
+		private void countRangeNode(Node<T> n, T lower, T upper) {
 			if (n != null) {
 				if (n.data.compareTo(lower) < 0) {
 					// If smaller than the lower bound find the value on the
 					// right child
-					return countRangeNode(n.right, lower, upper);
+					countRangeNode(n.right, lower, upper);
 				} else {
 					// if greater or equal than the lower bound find the
 					// possible out of range element in the left child
-					int leftCount = countRangeNode(n.left, lower, upper);
+					countRangeNode(n.left, lower, upper);
 					// if the element is smaller than the upper bound that means
 					// it is in the range
 					if (n.data.compareTo(upper) < 0) {
 						System.out.println(n.data);
-						int rightCount = countRangeNode(n.right, lower, upper);
+						countRangeNode(n.right, lower, upper);
 					}
-					return 0;
 				}
 			}
-			return 0;
 		}
 
 		public void insert(T data) {
