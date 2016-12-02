@@ -7,28 +7,34 @@ public class Problem2 {
 		Node<T> root;
 
 		public int countRange(T lower, T upper) {
-			countRangeNode(this.root, lower, upper);
-			return 0;
+			return this.countRangeNode(this.root, new Range<T>(null, null), new Range<T>(lower, upper), false);
 		}
 
-		private void countRangeNode(Node<T> n, T lower, T upper) {
+		private int countRangeNode(Node<T> n, Range<T> current, Range<T> target, boolean previousStatus) {
+			int result = 0;
 			if (n != null) {
-				if (n.data.compareTo(lower) < 0) {
-					// If smaller than the lower bound find the value on the
-					// right child
-					countRangeNode(n.right, lower, upper);
-				} else {
-					// if greater or equal than the lower bound find the
-					// possible out of range element in the left child
-					countRangeNode(n.left, lower, upper);
-					// if the element is smaller than the upper bound that means
-					// it is in the range
-					if (n.data.compareTo(upper) < 0) {
-						System.out.println(n.data);
-						countRangeNode(n.right, lower, upper);
+				boolean currentStatus = target.contains(n.data);
+
+				if (currentStatus != previousStatus) {
+					previousStatus = currentStatus;
+					if (currentStatus) {
+						result += n.size;
+					} else {
+						result -= n.size;
 					}
 				}
+
+				Range<T> leftRange = new Range<T>(current.lower, n.data);
+				Range<T> rightRange = new Range<T>(n.data, current.upper);
+
+				if (target.overlap(leftRange)) {
+					result += this.countRangeNode(n.left, leftRange, target, currentStatus);
+				}
+				if (target.overlap(rightRange)) {
+					result += this.countRangeNode(n.right, rightRange, target, currentStatus);
+				}
 			}
+			return result;
 		}
 
 		public void insert(T data) {
@@ -119,7 +125,7 @@ public class Problem2 {
 		}
 	}
 
-	public static class Node<T> {
+	public static class Node<T extends Comparable<? super T>> {
 		public T data;
 		public int size;
 		public Node<T> left;
@@ -136,24 +142,62 @@ public class Problem2 {
 		public String toString() {
 			return this.data.toString();
 		}
+	}
 
+	public static class Range<T extends Comparable<? super T>> {
+		// If lower/upper is null means infinity
+		public T lower;
+		public T upper;
+
+		public Range(T lowerLimit, T upperLimit) {
+			this.lower = lowerLimit;
+			this.upper = upperLimit;
+		}
+
+		public boolean overlap(Range<T> other) {
+			if (this.lower != null && other.upper != null && this.lower.compareTo(other.upper) >= 0) {
+				return false;
+			}
+			if (this.upper != null && other.lower != null && this.upper.compareTo(other.lower) <= 0) {
+				return false;
+			}
+			return true;
+		}
+
+		public boolean contains(T element) {
+			if (this.lower != null && this.lower.compareTo(element) >= 0) {
+				return false;
+			}
+			if (this.upper != null && this.upper.compareTo(element) <= 0) {
+				return false;
+			}
+			return true;
+		}
 	}
 
 	public static void main(String[] args) {
 		// Page 466
 		// Page 527
 		SimpleBinarySearchTreeMap<Integer> map = new SimpleBinarySearchTreeMap<Integer>();
-		map.insert(5);
-		map.insert(3);
-		map.insert(4);
-		map.insert(6);
+		map.insert(44);
+		map.insert(17);
+		map.insert(88);
 		map.insert(8);
-		map.insert(9);
-		map.insert(7);
-		map.insert(1);
+		map.insert(32);
+		map.insert(65);
+		map.insert(97);
+		map.insert(28);
+		map.insert(54);
+		map.insert(82);
+		map.insert(93);
+		map.insert(21);
+		map.insert(29);
+		map.insert(76);
+		map.insert(80);
 		System.out.println(map);
-		int count = map.countRange(6, 7);
+		int count = map.countRange(82, 97);
 		System.out.println(count);
+
 	}
 
 }
