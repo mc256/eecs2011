@@ -1,11 +1,114 @@
+/**********************************************************
+ * EECS2011: Fundamentals of Data Structures,  Fall 2016
+ * Assignment 4, Problem 3: Problem3.java
+ * Student Name: Jun Lin Chen
+ * Student cse account: chen256
+ * Student ID number: 214533111
+ **********************************************************/
 package A4sol;
+
+import java.util.Random;
 
 public class Problem3 {
 
-	public static class Election {
-		public void vote(int candidateId) {
+	public static class Election extends SimpleAVLTree<Candidate> {
 
+		Candidate winner = null;
+
+		public void vote(Candidate data){
+			this.insert(data);
 		}
+		
+		// Insertion
+		@Override
+		public void insert(Candidate data) {
+			this.root = insertNode(root, data);
+		}
+
+		@Override
+		public Node<Candidate> insertNode(Node<Candidate> n, Candidate data) {
+			if (n == null) {
+				// new candidate
+				// but we still need to check if he is the winner
+				this.updateWinner(data);
+				return new Node<Candidate>(data, null, null);
+			} else {
+				int compare = n.data.compareTo(data);
+				if (compare == 0) {
+					// if the candidate is existing in the AVL tree,
+					// increase the number of vote by one
+					n.data.votes ++;
+					// check if he has the highest votes
+					this.updateWinner(n.data);
+				} else if (compare > 0) {
+					n.left = insertNode(n.left, data);
+				} else {
+					n.right = insertNode(n.right, data);
+				}
+
+				// Update height
+				Node.computeHeight(n);
+
+				// Balance Tree
+				rotate(n);
+
+				return n;
+			}
+		}
+		
+		/**
+		 * Compare with the current winner, see who has higher votes
+		 * @param possibleWinner
+		 */
+		public void updateWinner(Candidate possibleWinner){
+			if (winner == null){
+				this.winner = possibleWinner;
+			}else{
+				if (this.winner.votes < possibleWinner.votes){
+					this.winner = possibleWinner;
+				}
+			}
+		}
+		
+		public Candidate getWinner(){
+			return this.winner;
+		}
+
+	}
+
+	public static class Candidate implements Comparable<Candidate> {
+
+		public Integer id;
+		public String candidateName;
+		public Integer votes;
+
+		public Candidate(Integer id, String name) {
+			this.id = id;
+			this.candidateName = name;
+			this.votes = 1;
+		}
+
+		public Candidate(Integer id) {
+			this(id, null);
+		}
+
+		/**
+		 * The compareTo() method here compare the candidate ID
+		 * @see java.lang.Comparable#compareTo(java.lang.Object)
+		 */
+		@Override
+		public int compareTo(Candidate o) {
+			return this.id.compareTo(o.id);
+		}
+		
+		@Override
+		public String toString(){
+			if (this.candidateName == null){
+				return String.format("Candidate[ID=%10d, Votes=%10d]", this.id, this.votes);
+			}
+			return String.format("Candidate[ID=%10d, Votes=%10d, %s]", this.id, this.votes, this.candidateName);
+		}
+		
 	}
 
 	public static class SimpleAVLTree<T extends Comparable<? super T>> {
@@ -16,19 +119,20 @@ public class Problem3 {
 			this.root = insertNode(root, data);
 		}
 
-		private Node<T> insertNode(Node<T> n, T data) {
+		public Node<T> insertNode(Node<T> n, T data) {
 			if (n == null) {
 				return new Node<T>(data, null, null);
 			} else {
-				if (n.data.compareTo(data) > 0) {
+				int compare = n.data.compareTo(data);
+				if (compare > 0) {
 					n.left = insertNode(n.left, data);
 				} else {
 					n.right = insertNode(n.right, data);
 				}
-				
-				//Update height
+
+				// Update height
 				Node.computeHeight(n);
-				
+
 				// Balance Tree
 				rotate(n);
 
@@ -62,7 +166,7 @@ public class Problem3 {
 						y.right = subtreeD;
 						n.left = x;
 						n.right = y;
-						
+
 						// Recompute the height
 						Node.computeHeight(x);
 						Node.computeHeight(y);
@@ -83,7 +187,7 @@ public class Problem3 {
 						x.left = subtreeC;
 						x.right = subtreeD;
 						n.right = x;
-						
+
 						// Recompute the height
 						Node.computeHeight(x);
 						Node.computeHeight(y);
@@ -137,6 +241,28 @@ public class Problem3 {
 				}
 			}
 		}
+
+		// Utility
+		private String toStringInorder(Node<T> n) {
+			StringBuilder sb = new StringBuilder();
+			if (n != null) {
+				if (n.left != null) {
+					sb.append(toStringInorder(n.left));
+					sb.append(",");
+				}
+				sb.append(n.data.toString());
+				if (n.right != null) {
+					sb.append(",");
+					sb.append(toStringInorder(n.right));
+				}
+			}
+			return sb.toString();
+		}
+
+		@Override
+		public String toString() {
+			return this.toStringInorder(this.root);
+		}
 	}
 
 	public static class Node<T extends Comparable<? super T>> {
@@ -152,16 +278,26 @@ public class Problem3 {
 			this.aux = 1;
 		}
 
+		// Height Calculation
+		/**
+		 * Get the height of the node
+		 * @param n node, it can be null
+		 * @return the height of the node, if the node is empty, return 0
+		 */
 		public static int getHeight(Node<?> n) {
 			return (n == null ? 0 : n.aux);
 		}
 
-		public static void computeHeight(Node<?> n){
+		/**
+		 * Recompute the height of the node by using it's children
+		 * @param n
+		 */
+		public static void computeHeight(Node<?> n) {
 			int left = getHeight(n.left);
 			int right = getHeight(n.right);
-			n.aux = (left > right ? left : right) + 1;			
+			n.aux = (left > right ? left : right) + 1;
 		}
-		
+
 		@Override
 		public String toString() {
 			return this.data.toString();
@@ -170,28 +306,54 @@ public class Problem3 {
 
 	public static void main(String[] args) {
 		// Page 569
-		SimpleAVLTree<Integer> tree = new SimpleAVLTree<Integer>();
-
-		tree.insert(6);
-		tree.insert(7);
-		tree.insert(8);
-		tree.insert(9);
-		tree.insert(10);
-		
-		tree.insert(1);
-		tree.insert(2);
-		tree.insert(3);
-		tree.insert(4);
-		tree.insert(5);
-
-		
-		
-		
-		int[] tickets = new int[] { 1, 1, 1, 2, 3, 5, 555, 555, 666, 555, 555, 888, 888, 888, 888, 888, 888, 888, 555, 1, 2, 333, 333, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
+		Random rn = new Random();
 		Election e = new Election();
-		for (int i = 0; i < tickets.length; i++) {
-			e.vote(tickets[i]);
-		}
+
+		Candidate c1 = new Candidate(rn.nextInt(999999),"Donald Trump");
+		Candidate c2 = new Candidate(rn.nextInt(999999),"Hillary Clinton");
+		Candidate c3 = new Candidate(rn.nextInt(999999),"Johson");
+		Candidate c4 = new Candidate(rn.nextInt(999999),"Stein");
+
+
+		e.vote(c1);
+		e.vote(c1);
+		e.vote(c1);
+		e.vote(c1);
+		e.vote(c1);
+		e.vote(c1);
+		e.vote(c4);
+		e.vote(c1);
+		e.vote(c3);
+		e.vote(c2);
+		e.vote(c1);
+		e.vote(c4);
+		e.vote(c1);
+		e.vote(c1);
+		e.vote(c3);
+		e.vote(c2);
+		e.vote(c2);
+		e.vote(c2);
+		e.vote(c2);
+		e.vote(c2);
+		e.vote(c1);
+		e.vote(c1);
+		e.vote(c2);
+		e.vote(c3);
+		e.vote(c4);
+		e.vote(c1);
+		e.vote(c3);
+		e.vote(c1);
+		e.vote(c1);
+		e.vote(c4);
+		e.vote(c2);
+		e.vote(c1);
+		e.vote(c1);
+		e.vote(c1);		
+		e.vote(c1);
+		e.vote(c1);
+		
+		System.out.println(e.getWinner());
+		System.out.println(e);
 	}
 
 }
