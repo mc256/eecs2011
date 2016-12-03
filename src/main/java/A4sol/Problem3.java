@@ -248,11 +248,11 @@ public class Problem3 {
 			if (n != null) {
 				if (n.left != null) {
 					sb.append(toStringInorder(n.left));
-					sb.append(",");
+					sb.append(",\n\t");
 				}
 				sb.append(n.data.toString());
 				if (n.right != null) {
-					sb.append(",");
+					sb.append(",\n\t");
 					sb.append(toStringInorder(n.right));
 				}
 			}
@@ -261,7 +261,7 @@ public class Problem3 {
 
 		@Override
 		public String toString() {
-			return this.toStringInorder(this.root);
+			return "{\n\t" + this.toStringInorder(this.root) + "\n}";
 		}
 	}
 
@@ -352,7 +352,9 @@ public class Problem3 {
 		e.vote(c1);
 		e.vote(c1);
 		
+		System.out.println("The winner is:");
 		System.out.println(e.getWinner());
+		System.out.println("Show all the candidates:");
 		System.out.println(e);
 	}
 

@@ -64,10 +64,14 @@ public class Problem2 {
 				// If there is possible node which is in the range, go deeper
 				// and check it's exact value
 				if (target.overlap(leftRange)) {
-					result += this.countRangeNode(n.left, leftRange, target, currentStatus);
+					if (!target.contains(leftRange)){
+						result += this.countRangeNode(n.left, leftRange, target, currentStatus);
+					}
 				}
 				if (target.overlap(rightRange)) {
-					result += this.countRangeNode(n.right, rightRange, target, currentStatus);
+					if (!target.contains(rightRange)){
+						result += this.countRangeNode(n.right, rightRange, target, currentStatus);
+					}
 				}
 			}
 			return result;
@@ -89,6 +93,55 @@ public class Problem2 {
 				}
 				n.size++; // IMPORTANT !!!!!!
 				return n;
+			}
+		}
+
+		// Remove
+		public void remove(T data) {
+			this.root = removeNode(root, data);
+		}
+
+		private Node<T> removeNode(Node<T> n, T data) {
+			if (n == null) {
+				return null;
+			} else {
+				int compare = n.data.compareTo(data);
+				if (compare == 0) {
+					if (n.left == null && n.right == null) {
+						return null;
+					} else if (n.left != null && n.right != null) {
+						n.data = this.largestValue(n.left);
+						n.left = this.removeNode(n.left, n.data);
+						n.size--; // IMPORTANT !!!!!!
+						return n;
+					} else {
+						n.size--; // IMPORTANT !!!!!!
+						if (n.left != null) {
+							return n.left;
+						} else {
+							return n.right;
+						}
+					}
+				} else if (compare > 0) {
+					n.left = removeNode(n.left, data);
+				} else {
+					n.right = removeNode(n.right, data);
+				}
+				return n;
+			}
+		}
+
+		public T largestValue() {
+			return largestValue(this.root);
+		}
+
+		private T largestValue(Node<T> root) {
+			if (root == null) {
+				return null;
+			} else if (root.right != null) {
+				return largestValue(root.right);
+			} else {
+				return root.data;
 			}
 		}
 
@@ -161,13 +214,22 @@ public class Problem2 {
 			if (this.upper != null && this.upper.compareTo(element) < 0) {
 				return false;
 			}
+			//System.out.printf("==>%s\n",element.toString());
 			return true;
+		}
+		
+		public boolean contains(Range<T> other){
+			if (this.lower != null && other.lower != null && this.lower.compareTo(other.lower) <= 0 && this.upper != null && other.upper != null && this.upper.compareTo(other.upper) >= 0){
+				return true;
+			}
+			return false;
 		}
 	}
 
 	public static void main(String[] args) {
 		// Page 466
 		// Page 527
+		
 		SimpleBinarySearchTree<Integer> map = new SimpleBinarySearchTree<Integer>();
 		map.insert(44);
 		map.insert(17);
@@ -189,6 +251,57 @@ public class Problem2 {
 		System.out.printf("in range [%d - %d] => %d\n", 30, 76, map.countRange(30, 76));
 		System.out.printf("in range [%d - %d] => %d\n", 92, 100, map.countRange(92, 100));
 		System.out.printf("in range [%d - %d] => %d\n", 110, 120, map.countRange(110, 120));
+		System.out.printf("in range [%d - %d] => %d\n", 0, 8, map.countRange(0, 8));
+
+		System.out.println("-----------------------------------------------------");
+		map = new SimpleBinarySearchTree<Integer>();
+		map.insert(1);
+		map.insert(2);
+		map.insert(3);
+		map.insert(4);
+		map.insert(5);
+		map.insert(6);
+		map.insert(7);
+		map.insert(8);
+		map.insert(9);
+		map.insert(10);
+		map.insert(11);
+		map.insert(12);
+		map.insert(13);
+		map.insert(14);
+		map.insert(15);
+		System.out.println(map);
+		System.out.printf("in range [%d - %d] => %d\n", 3, 8, map.countRange(3, 8));
+		System.out.printf("in range [%d - %d] => %d\n", 3, 7, map.countRange(3, 7));
+		System.out.printf("in range [%d - %d] => %d\n", 9, 10, map.countRange(9, 10));
+		System.out.printf("in range [%d - %d] => %d\n", 11, 122, map.countRange(11, 122));
+		System.out.printf("in range [%d - %d] => %d\n", 0, 8, map.countRange(0, 8));
+		
+		
+
+		System.out.println("-----------------------------------------------------");
+		map = new SimpleBinarySearchTree<Integer>();
+		map.insert(1);
+		map.insert(2);
+		map.insert(7);
+		map.insert(8);
+		map.insert(6);
+		map.insert(12);
+		map.insert(3);
+		map.insert(9);
+		map.insert(10);
+		map.insert(11);
+		map.insert(56);
+		map.insert(15);
+		map.insert(4);
+		map.insert(5);
+		map.insert(13);
+		map.insert(14);
+		System.out.println(map);
+		System.out.printf("in range [%d - %d] => %d\n", 3, 8, map.countRange(3, 8));
+		System.out.printf("in range [%d - %d] => %d\n", 3, 7, map.countRange(3, 7));
+		System.out.printf("in range [%d - %d] => %d\n", 9, 10, map.countRange(9, 10));
+		System.out.printf("in range [%d - %d] => %d\n", 11, 122, map.countRange(11, 122));
 		System.out.printf("in range [%d - %d] => %d\n", 0, 8, map.countRange(0, 8));
 		
 
