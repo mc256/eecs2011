@@ -42,7 +42,7 @@ public class Problem1 {
 		Range aRange = new Range(length);
 		Range bRange = new Range(length);
 
-		Bound aBound, bBound;
+		Boundary aBound, bBound;
 		while (true) {
 			// System.out.printf("----------------------------------------------\n");
 			// System.out.printf("A %s \t\t B %s\n", aRange, bRange);
@@ -52,11 +52,11 @@ public class Problem1 {
 			int aMid = aRange.getMiddle();
 			int bMid = bRange.getMiddle();
 			if (a[aMid] < b[bMid]) {
-				aBound = new Bound(aMid, bMid + aMid);
-				bBound = new Bound(aBound.getUpper() + 1, length + bMid);
+				aBound = new Boundary(aMid, bMid + aMid);
+				bBound = new Boundary(aBound.getUpper() + 1, length + bMid);
 			} else {
-				bBound = new Bound(bMid, aMid + bMid);
-				aBound = new Bound(bBound.getUpper() + 1, length + aMid);
+				bBound = new Boundary(bMid, aMid + bMid);
+				aBound = new Boundary(bBound.getUpper() + 1, length + aMid);
 			}
 
 			// System.out.printf("A %s \t\t B %s\n", aBound, bBound);
@@ -145,11 +145,11 @@ public class Problem1 {
 		}
 	}
 
-	public static class Bound {
+	public static class Boundary {
 		private int lower;
 		private int upper;
 
-		public Bound(int lower, int upper) {
+		public Boundary(int lower, int upper) {
 			this.lower = lower;
 			this.upper = upper;
 		}

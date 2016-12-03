@@ -3,7 +3,7 @@ package A4sol;
 public class Problem2 {
 
 	// I only implements the parts that are needed in this assignment
-	public static class SimpleBinarySearchTreeMap<T extends Comparable<? super T>> {
+	public static class SimpleBinarySearchTree<T extends Comparable<? super T>> {
 		Node<T> root;
 
 		public int countRange(T lower, T upper) {
@@ -155,22 +155,23 @@ public class Problem2 {
 		}
 
 		public boolean overlap(Range<T> other) {
-			if (this.lower != null && other.upper != null && this.lower.compareTo(other.upper) >= 0) {
+			if (this.lower != null && other.upper != null && this.lower.compareTo(other.upper) > 0) {
 				return false;
 			}
-			if (this.upper != null && other.lower != null && this.upper.compareTo(other.lower) <= 0) {
+			if (this.upper != null && other.lower != null && this.upper.compareTo(other.lower) < 0) {
 				return false;
 			}
 			return true;
 		}
 
 		public boolean contains(T element) {
-			if (this.lower != null && this.lower.compareTo(element) >= 0) {
+			if (this.lower != null && this.lower.compareTo(element) > 0) {
 				return false;
 			}
-			if (this.upper != null && this.upper.compareTo(element) <= 0) {
+			if (this.upper != null && this.upper.compareTo(element) < 0) {
 				return false;
 			}
+			System.out.printf("==>[%d]\n", element);
 			return true;
 		}
 	}
@@ -178,7 +179,7 @@ public class Problem2 {
 	public static void main(String[] args) {
 		// Page 466
 		// Page 527
-		SimpleBinarySearchTreeMap<Integer> map = new SimpleBinarySearchTreeMap<Integer>();
+		SimpleBinarySearchTree<Integer> map = new SimpleBinarySearchTree<Integer>();
 		map.insert(44);
 		map.insert(17);
 		map.insert(88);
@@ -195,7 +196,7 @@ public class Problem2 {
 		map.insert(76);
 		map.insert(80);
 		System.out.println(map);
-		int count = map.countRange(82, 97);
+		int count = map.countRange(30, 80);
 		System.out.println(count);
 
 	}
