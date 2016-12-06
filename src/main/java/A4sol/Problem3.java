@@ -15,6 +15,10 @@ public class Problem3 {
 
 		Candidate winner = null;
 
+		/**
+		 * This method actually do insert operation
+		 * @param data
+		 */
 		public void vote(Candidate data){
 			this.insert(data);
 		}

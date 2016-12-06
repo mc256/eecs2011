@@ -27,6 +27,7 @@ public class Problem1 {
 		return sb.toString();
 	}
 
+	// Function Methods
 	/**
 	 * Find the k-th largest element in array a and array b
 	 * @param a a sorted array
@@ -46,6 +47,8 @@ public class Problem1 {
 		findSmallest(a, b, a.length);
 	}
 	
+	
+	//-------------- IMPORTANT ----------------------
 	/**
 	 * find the k-th smallest element in array a and array b, this algorithm takes O(log(n))
 	 * @param a a sorted array
@@ -67,6 +70,7 @@ public class Problem1 {
 		Boundary aBound, bBound;
 		while (true) {
 			/*
+			 //For test purpose
 			 System.out.printf("----------------------------------------------\n");
 			 System.out.printf("A %s \t\t B %s\n", aRange, bRange);
 			 System.out.printf("A %d[%d] \t\t B %d[%d]\n",a[aRange.getMiddle()],aRange.getMiddle(), b[bRange.getMiddle()],bRange.getMiddle());
@@ -86,6 +90,7 @@ public class Problem1 {
 			}
 			
 			/*
+			//For test purpose
 			System.out.printf("A %s \t\t B %s\n", aBound, bBound);
 			*/
 			
